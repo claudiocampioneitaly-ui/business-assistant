@@ -1,6 +1,5 @@
 import { supabase } from '../supabaseClient';
 
-
 function Header() {
     return (
         <header>
