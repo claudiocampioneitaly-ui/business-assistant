@@ -1,4 +1,8 @@
-import { supabase } from '../supabaseClient';
+
+import { createClient } from '@supabase/supabase-js'
+
+import { supabase } from '../supabaseClient'
+
 
 function Header() {
     return (
