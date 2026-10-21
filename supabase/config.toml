@@ -1,0 +1,2 @@
+[functions.evaluate-idea]
+entrypoint = "./functions/evaluate-idea/index.js"

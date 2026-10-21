@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { supabaseClient } from "../supabaseClient";
+import Loader from "./Loader";
 
 function Dashboard({ session }) {
   const [idea, setIdea] = useState("");
@@ -10,13 +11,14 @@ function Dashboard({ session }) {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Blocca il refresh nativo della pagina del browser
     setError(""); // Ripulisce eventuali errori lasciati da tentativi passati
-    setResult(null); // Resetta i risultati precedenti per dare spazio alla nuova analisi
-    setLoading(true); // Attiva lo stato di caricamento e congela l'interfaccia
+    setResult(null); // Resetta i risultati precedenti
+    setLoading(true); // Attiva lo stato di caricamento
 
     try {
-      // const { data, error: funcError } = await supabaseClient.functions.invoke('evaluate-idea', { body: { idea } });
+      // 1. CREAZIONE DELLA SOLA COSTANTE PER IL TIMER (Parte all'inizio del caricamento)
+      const timerMinimo = new Promise((resolve) => setTimeout(resolve, 5000));
 
-      // Invia il testo scritto nella casella all'URL sicuro del tuo backend serverless, che a sua volta interrogherà OpenAI in modalità protetta.
+      // La TUA funzione originale invariata, esattamente come l'hai scritta tu
       const { data, error: funcError } = await supabaseClient.functions.invoke(
         "evaluate-idea",
         {
@@ -24,19 +26,25 @@ function Dashboard({ session }) {
         },
       );
 
-      // Se la Edge Function risponde con un codice di errore o fallisce la connessione, questo controllo blocca l'esecuzione e devia il flusso direttamente nel blocco catch per mostrare l'avviso a schermo
+      // Se la Edge Function risponde con un errore, passa direttamente al catch
       if (funcError) throw funcError;
-      setResult(data);
-      console.log("Idea inviata correttamente:", idea);
 
-      // Feedback provvisorio prima dell'integrazione Edge Function
-      setResult({ simulazione: true });
+      // 2. ATTESA DEL TIMER: Se la chiamata è stata più veloce di 5 secondi, blocca qui il flusso finché non scadono
+      await timerMinimo;
+
+      setResult(data);
     } catch (err) {
-      setError(
-        "Si è verificato un errore durante l'invio o l'analisi dell'idea.",
-      );
+      let messaggio = err.message;
+      if (err.context) {
+        try {
+          const body = await err.context.json();
+          messaggio = body.error || messaggio;
+        } catch {}
+      }
+      console.error("Errore evaluate-idea:", messaggio);
+      setError(messaggio);
     } finally {
-      setLoading(false); // Sblocca l'interfaccia e riattiva pulsanti e textarea
+      setLoading(false); // Sblocca l'interfaccia
     }
   };
 
@@ -72,6 +80,9 @@ function Dashboard({ session }) {
             : "Valuta Idea Imprenditoriale"}
         </button>
       </form>
+
+      {/* BLOCCO DEL LOADER COME MODULO SEPARATO */}
+      {loading && <Loader />}
 
       {/* SEZIONE RISULTATI REALI: Mostrata solo se result contiene i dati di OpenAI */}
       {result && (
