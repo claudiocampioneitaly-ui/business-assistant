@@ -22,12 +22,7 @@
   --color-error: #ba1a1a;          /* testo e icone di errore */
   --color-error-soft: #ffdad6;     /* sfondo del banner di errore */
 
-  /* =========================================
-   DESIGN TOKENS - LAYOUT E TIPOGRAFIA
-   Approccio mobile-first: i valori base sono per mobile,
-   la media query in fondo li sovrascrive per desktop
-   ========================================= */
-:root {
+ 
   /* --- Border radius --- */
   --radius-md: 1rem;       /* default: card, input, bottoni */
   --radius-lg: 2rem;       /* card grandi, modali */
@@ -76,7 +71,7 @@
   --tracking-tight: -0.02em;  /* titoli */
   --tracking-normal: 0;       /* testo e label */
   --tracking-wide: 0.04em;    /* label piccole in maiuscolo */
-}
+
 
 /* --- Desktop: si ridefiniscono solo i valori che cambiano --- */
 @media (min-width: 768px) {
@@ -120,11 +115,11 @@ html.dark {
 
 /* Applica le variabili a tutta la pagina con una transizione fluida */
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(  --color-surface);
+  color: var(--color-text);
   transition: background-color 0.3s ease, color 0.3s ease;
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body)
 }
 
 
