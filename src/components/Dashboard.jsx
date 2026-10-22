@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { supabaseClient } from "../supabaseClient";
 import Loader from "./Loader";
+import DownloadPDFButton from "./DownloadPDFButton";
 
 function Dashboard({ session }) {
   const [idea, setIdea] = useState("");
@@ -81,65 +82,68 @@ function Dashboard({ session }) {
         </button>
       </form>
 
-      {/* BLOCCO DEL LOADER COME MODULO SEPARATO */}
+      {/*BLOCCO DEL LOADER COME MODULO SEPARATO*/}
       {loading && <Loader />}
 
       {/* SEZIONE RISULTATI REALI: Mostrata solo se result contiene i dati di OpenAI */}
       {result && (
-        <div className="results-section">
-          {/* Box con il voto numerico reale estratto dal JSON */}
-          <div className="results-score-box">
-            <h3>Punteggio Generale: {result.punteggio_generale}/100</h3>
+        <>
+          <DownloadPDFButton result={result} />
+          <div className="results-section">
+            {/* Box con il voto numerico reale estratto dal JSON */}
+            <div className="results-score-box">
+              <h3>Punteggio Generale: {result.punteggio_generale}/100</h3>
+            </div>
+
+            {/* Paragrafo descrittivo con la sintesi motivata dell'AI */}
+            <p className="results-summary">{result.sintesi}</p>
+
+            {/* Griglia SWOT organizzata nei 4 quadranti accademici */}
+            <div className="swot-grid">
+              <div className="swot-card strength">
+                <h4>Punti di Forza</h4>
+                <ul>
+                  {result.punti_forza?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="swot-card weakness">
+                <h4>Punti Deboli</h4>
+                <ul>
+                  {result.punti_deboli?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="swot-card opportunity">
+                <h4>Opportunità</h4>
+                <ul>
+                  {result.opportunita?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="swot-card risk">
+                <h4>Rischi</h4>
+                <ul>
+                  {result.rischi?.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Disclaimer obbligatorio richiesto dalle specifiche tecniche */}
+            <p className="disclaimer-text">
+              La valutazione AI è una stima motivata, non una previsione
+              scientifica del successo commerciale.
+            </p>
           </div>
-
-          {/* Paragrafo descrittivo con la sintesi motivata dell'AI */}
-          <p className="results-summary">{result.sintesi}</p>
-
-          {/* Griglia SWOT organizzata nei 4 quadranti accademici */}
-          <div className="swot-grid">
-            <div className="swot-card strength">
-              <h4>Punti di Forza</h4>
-              <ul>
-                {result.punti_forza?.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="swot-card weakness">
-              <h4>Punti Deboli</h4>
-              <ul>
-                {result.punti_deboli?.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="swot-card opportunity">
-              <h4>Opportunità</h4>
-              <ul>
-                {result.opportunita?.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="swot-card risk">
-              <h4>Rischi</h4>
-              <ul>
-                {result.rischi?.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Disclaimer obbligatorio richiesto dalle specifiche tecniche */}
-          <p className="disclaimer-text">
-            La valutazione AI è una stima motivata, non una previsione
-            scientifica del successo commerciale.
-          </p>
-        </div>
+        </>
       )}
     </div>
   );

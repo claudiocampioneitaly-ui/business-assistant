@@ -21,22 +21,10 @@ function Auth() {
     try {
       if (isRegistering) {
         // --- CASO REGISTRAZIONE ---
-        // Esegue la chiamata asincrona a Supabase per registrare un nuovo utente.
-        // Utilizziamo 'await' perché la richiesta va al server e dobbiamo attendere la risposta.
         const { error: authError } = await supabaseClient.auth.signUp({
-/*const { error: authError } = ...: Questa è una destrutturazione con rinomina. Supabase risponde restituendo un oggetto che contiene vari dati (come data e error). Con questa sintassi estraiamo solo la proprietà error e la rinominiamo in authError (tramite i due punti :) per evitare conflitti di nome con altre variabili error che potresti avere nello stesso file.*/
-
-/*supabaseClient.auth.signUp({ ... }): È il metodo ufficiale della libreria Supabase che invia l'email e la password inserite dall'utente per creare un nuovo account sul loro database.*/
-
-
-
-          email: email,       // Invia l'email inserita dall'utente nel form di registrazione
-          password: password, // Invia la password scelta dall'utente
+          email: email,
+          password: password,
         });
-        
-        // Nota: Dalla risposta destrutturiamo l'oggetto estratto, prendendo solo la proprietà 'error' 
-        // e rinominandola in 'authError' (tramite la sintassi 'error: authError') per verificare 
-        // subito se la registrazione è andata a buon fine o se si sono verificati problemi.
         if (authError) throw authError;
         setSuccessMessage('Registrazione completata! Controlla la tua email per confermare l\'account.');
       } else {
@@ -104,4 +92,3 @@ function Auth() {
 }
 
 export default Auth;
-
