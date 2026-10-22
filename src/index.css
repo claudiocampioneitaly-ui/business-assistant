@@ -1,19 +1,121 @@
 /* Colori di base per il tema CHIARO (Light Mode) */
 :root {
-  --bg-primary: #ffffff;
-  --bg-card: #f8f9fa;
-  --text-primary: #212529;
-  --border-color: #dee2e6;
-  --accent-color: #0d6efd;
+  /* --- Brand (verde) --- */
+  --color-primary: #10b981;        /* bottoni, link attivi, anello score */
+  --color-primary-hover: #006c49;  /* hover/active dei bottoni primari */
+  --color-primary-soft: #d1fae5;   /* sfondo badge e tag verdi (es. "Analisi completata") */
+  --color-on-primary: #ffffff;     /* testo sopra il verde */
+
+  /* --- Superfici --- */
+  --color-bg: #f8fafc;             /* sfondo della pagina */
+  --color-surface: #ffffff;        /* card, modali, input */
+  --color-surface-alt: #f4f2fd;    /* card annidate, righe alternate, hover leggeri */
+
+  /* --- Testo --- */
+  --color-text: #1a1b22;           /* titoli e testo principale */
+  --color-text-muted: #475569;     /* descrizioni, label, testo secondario */
+
+  /* --- Bordi --- */
+  --color-border: #bbcabf;         /* bordi di card, input e divisori */
+
+  /* --- Stati --- */
+  --color-error: #ba1a1a;          /* testo e icone di errore */
+  --color-error-soft: #ffdad6;     /* sfondo del banner di errore */
+
+  /* =========================================
+   DESIGN TOKENS - LAYOUT E TIPOGRAFIA
+   Approccio mobile-first: i valori base sono per mobile,
+   la media query in fondo li sovrascrive per desktop
+   ========================================= */
+:root {
+  /* --- Border radius --- */
+  --radius-md: 1rem;       /* default: card, input, bottoni */
+  --radius-lg: 2rem;       /* card grandi, modali */
+  --radius-xl: 3rem;       /* contenitori hero */
+  --radius-full: 9999px;   /* pill, badge, avatar */
+
+  /* --- Spaziature (scala unica per padding, margin e gap) --- */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 3rem;
+
+  /* --- Layout (cambiano tra mobile e desktop) --- */
+  --page-padding: 1.25rem; /* margine laterale della pagina (ex margin-mobile) */
+  --gutter: var(--space-md); /* spazio tra colonne/card (ex gutter-mobile) */
+
+  /* --- Font family (solo 2 font in tutto il design) --- */
+  --font-heading: "Hanken Grotesk", sans-serif;
+  --font-body: "Geist", sans-serif;
+
+  /* --- Dimensioni testo --- */
+  --text-xs: 11px;    /* label piccole, badge maiuscoli */
+  --text-sm: 12px;    /* testo piccolo, label */
+  --text-md: 14px;    /* testo normale, label dei bottoni */
+  --text-lg: 16px;    /* paragrafi grandi */
+  --text-xl: 18px;    /* headline-sm */
+  --text-2xl: 22px;   /* headline-md */
+  --text-3xl: 30px;   /* headline-lg */
+  --text-4xl: 28px;   /* headline-xl (mobile) */
+  --text-5xl: 36px;   /* headline-2xl (mobile), es. "404" e titolo hero */
+
+  /* --- Pesi --- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* --- Interlinea (senza unità: si adatta alla dimensione del font) --- */
+  --leading-tight: 1.2;   /* titoli grandi */
+  --leading-snug: 1.35;   /* titoli piccoli e label */
+  --leading-normal: 1.6;  /* paragrafi */
+
+  /* --- Spaziatura lettere --- */
+  --tracking-tight: -0.02em;  /* titoli */
+  --tracking-normal: 0;       /* testo e label */
+  --tracking-wide: 0.04em;    /* label piccole in maiuscolo */
 }
 
-/* Colori sostitutivi quando l'helper aggiunge la classe .dark (Dark Mode) */
+/* --- Desktop: si ridefiniscono solo i valori che cambiano --- */
+@media (min-width: 768px) {
+  :root {
+    --page-padding: var(--space-2xl); /* ex spacing-margin */
+    --gutter: var(--space-lg);        /* ex spacing-gutter */
+    --text-4xl: 40px;                 /* headline-xl desktop */
+    --text-5xl: 56px;                 /* headline-2xl desktop */
+  }
+}
+
+
+
+}
+
+
+
 html.dark {
-  --bg-primary: #121212;
-  --bg-card: #1e1e1e;
-  --text-primary: #f8f9fa;
-  --border-color: #333333;
-  --accent-color: #3700b3;
+  /* --- Brand  --- */
+  --color-primary: #10b981;
+  --color-primary-hover: #4edea3;  
+  --color-primary-soft: rgba(16, 185, 129, 0.15); 
+  --color-on-primary: #00422b;
+
+  /* --- Superfici --- */
+  --color-bg: #0e0e10;
+  --color-surface: #1c1b1d;
+  --color-surface-alt: #2a2a2c;
+
+  /* --- Testo --- */
+  --color-text: #e5e1e4;
+  --color-text-muted: #bbcabf;
+
+  /* --- Bordi --- */
+  --color-border: #3c4a42;
+
+  /* --- Stati --- */
+  --color-error: #ffb4ab;
+  --color-error-soft: #93000a;
 }
 
 /* Applica le variabili a tutta la pagina con una transizione fluida */
@@ -24,3 +126,5 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
 }
+
+
