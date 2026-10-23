@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router";
 
-import { useAuth } from './hooks/useAuth';
-import { getInitialTheme, applyTheme } from './utils/themeHelper';
+import { useAuth } from "./hooks/useAuth";
+import { getInitialTheme, applyTheme } from "./utils/themeHelper";
 
-import Header from './components/Header';
-import Auth from './components/Auth';
-import Dashboard from './components/Dashboard';
-import Loader from './components/Loader';
-import NotFound from './components/NotFound';
+import Header from "./components/Header";
+import Auth from "./components/Auth";
+import Dashboard from "./components/Dashboard";
+import Loader from "./components/Loader";
+import NotFound from "./components/NotFound";
 
 // HOME: Gestisce la schermata iniziale in base allo stato di autenticazione
 function HomeRoute({ session }) {
@@ -43,7 +43,7 @@ function App() {
 
   // Funzione per invertire il tema (Light <-> Dark)
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
   // 2. Gestione Modulo Autenticazione (Custom Hook)
@@ -51,8 +51,14 @@ function App() {
   const [authVisualLoading, setAuthVisualLoading] = useState(false);
 
   // Gestione del caricamento visivo dopo l'autenticazione
+  // Gestione del caricamento visivo dopo l'autenticazione
+  // Dipende dall'id dell'utente e non dall'oggetto session: Supabase crea una nuova session
+  // a ogni rinnovo del token, e senza questo accorgimento il Loader ripartirebbe
+  // smontando la Dashboard (con perdita del risultato dell'analisi)
+  const userId = session?.user?.id;
+
   useEffect(() => {
-    if (session) {
+    if (userId) {
       setAuthVisualLoading(true);
 
       const timer = setTimeout(() => {
@@ -65,14 +71,14 @@ function App() {
 
     // Se non c'è una sessione, disattiviamo il caricamento visivo
     setAuthVisualLoading(false);
-  }, [session]);
+  }, [userId]);
 
   // Schermata di blocco durante il controllo iniziale del token o del refresh
   if (loading) {
     return (
       <div
         className="loading-screen"
-        style={{ padding: '2rem', textAlign: 'center' }}
+        style={{ padding: "2rem", textAlign: "center" }}
       >
         <p>Caricamento in corso...</p>
       </div>
@@ -82,10 +88,7 @@ function App() {
   // Mostra lo spinner e impedisce l'accesso immediato alla Dashboard
   if (authVisualLoading) {
     return (
-      <div
-        className="app-loader-wrapper"
-        style={{ padding: '4rem 2rem' }}
-      >
+      <div className="app-loader-wrapper" style={{ padding: "4rem 2rem" }}>
         <Loader />
       </div>
     );
@@ -95,19 +98,12 @@ function App() {
   return (
     <>
       {/* L'header globale riceve lo stato del tema e della sessione per regolare i pulsanti */}
-      <Header
-        theme={theme}
-        toggleTheme={toggleTheme}
-        session={session}
-      />
+      <Header theme={theme} toggleTheme={toggleTheme} session={session} />
 
       <main>
         <Routes>
           {/* Home: login/registrazione oppure reindirizzamento alla Dashboard */}
-          <Route
-            path="/"
-            element={<HomeRoute session={session} />}
-          />
+          <Route path="/" element={<HomeRoute session={session} />} />
 
           {/* Dashboard: accessibile soltanto con una sessione valida */}
           <Route
@@ -116,10 +112,7 @@ function App() {
           />
 
           {/* Rotta jolly: intercetta tutti gli URL non definiti e mostra la pagina 404 */}
-          <Route
-            path="*"
-            element={<NotFound />}
-          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </>

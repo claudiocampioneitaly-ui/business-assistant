@@ -1,14 +1,32 @@
 /* Variabili del file 1 senza un equivalente nel tema */
+/* Valori per il tema CHIARO: tonalità più scure, leggibili su sfondo bianco */
 :root {
+  --primary-fixed: #10b981; /* pallino in orbita (in chiaro coincide con --color-primary) */
+  --tertiary: #0369a1; /* azzurro scuro: contrasto sufficiente sul bianco */
+  --loader-shadow: rgb(
+    0 0 0 / 12%
+  ); /* ombra leggera del nucleo dello spinner */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Valori originali del file 1, pensati per il tema SCURO */
+html.dark {
   --primary-fixed: #6ffbbe;
   --tertiary: #7bd0ff;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --loader-shadow: rgb(0 0 0 / 40%);
 }
 
 /* Rimossi da qui il reset globale (*, *::before, *::after con margin: 0),
    html/body con height: 100% e le regole su body (overflow: hidden, user-select: none,
    font, colore e sfondo): in un CSS di componente valevano per tutto il sito
    e bloccavano lo scroll della pagina. Gli stili di base della pagina restano in index.css. */
+
+/* Colori: i vecchi valori rgba() fissi (pensati solo per il tema scuro) sono stati sostituiti
+   con le variabili di index.css, così il Loader cambia insieme al tema chiaro/scuro.
+   - rgba(16, 185, 129, x)  -> --color-primary
+   - rgba(78, 222, 163, x)  -> --color-primary-hover (#4edea3 in scuro, #006c49 in chiaro)
+   - rgba(60, 74, 66, x)    -> --color-border
+   - sfondi scuri fissi      -> --color-surface / --color-bg */
 
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined";
@@ -49,7 +67,10 @@
   align-items: center;
   text-align: center;
   border-radius: 24px;
-  background: rgba(32, 31, 34, 0.9);
+  color: var(--color-text);
+  background: var(
+    --color-surface
+  ); /* prima: rgba(32, 31, 34, 0.9) fisso, scuro anche in light */
   transition: all 0.3s;
 }
 @media (min-width: 640px) {
@@ -72,8 +93,9 @@
 
 .card.loading {
   --accent: var(--color-primary-hover);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.25);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  box-shadow: 0 0 35px -5px
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 .card h2 {
@@ -100,7 +122,7 @@
   position: absolute;
   inset: 8px;
   border-radius: 50%;
-  background: rgba(16, 185, 129, 0.15);
+  background: color-mix(in srgb, var(--color-primary) 15%, transparent);
   filter: blur(24px);
   animation: pulse-glow 3s ease-in-out infinite;
 }
@@ -108,7 +130,8 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px dashed rgba(78, 222, 163, 0.4);
+  border: 1px dashed
+    color-mix(in srgb, var(--color-primary-hover) 40%, transparent);
   animation: spin 8s linear infinite;
 }
 .spinner .ring-inner {
@@ -130,15 +153,16 @@
   align-items: center;
   justify-content: center;
   background: var(--color-surface-alt);
-  border: 1px solid rgba(78, 222, 163, 0.5);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary-hover) 50%, transparent);
+  box-shadow: 0 10px 15px -3px var(--loader-shadow);
   color: var(--color-primary-hover);
 }
 .spinner .core .ping {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: rgba(78, 222, 163, 0.2);
+  background: color-mix(in srgb, var(--color-primary-hover) 20%, transparent);
   animation: ping-subtle 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 .spinner .orbit {
@@ -155,7 +179,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--primary-fixed);
-  box-shadow: 0 0 8px #4edea3;
+  box-shadow: 0 0 8px var(--color-primary);
 }
 
 /* ---------- Pannello progresso ---------- */
@@ -163,16 +187,17 @@
   width: 100%;
   margin-top: 24px;
   padding: 16px;
-  text-align: left;
+  text-align: center;
   border-radius: 16px;
-  background: rgba(14, 14, 16, 0.9);
-  border: 1px solid rgba(60, 74, 66, 0.3);
+  background: var(--color-bg); /* prima: rgba(14, 14, 16, 0.9) fisso */
+  border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
 }
 
 .log {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(60, 74, 66, 0.2);
+  /*  margin-top: 16px;
+  padding-top: 12px; */
+  /*   border-top: 1px solid color-mix(in srgb, var(--color-border) 35%, transparent);
+ */
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -187,6 +212,8 @@
   gap: 8px;
 }
 .log .running {
+  display: flex;
+  justify-content: center;
   color: var(--tertiary);
   animation: pulse-text 2s ease-in-out infinite;
 }

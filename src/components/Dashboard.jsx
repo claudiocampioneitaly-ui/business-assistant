@@ -3,7 +3,7 @@ import { supabaseClient } from "../supabaseClient";
 import Loader from "./Loader";
 import DownloadPDFButton from "./DownloadPDFButton";
 import Score from "../../cassetto-degli-attrezzi/Score";
-import "./DashboardResults.css"; // Stili delle nuove sezioni (metriche, competitor, GO/NO GO, suggerimenti)
+import "./Dashboard.css"; // Stili delle nuove sezioni (metriche, competitor, GO/NO GO, suggerimenti)
 
 // Classe di colore di una metrica in base al valore (verde / ambra / rosso)
 function livelloMetrica(valore) {
@@ -122,7 +122,7 @@ function Dashboard({ session }) {
             status={livelloPotenziale}
             benchmark="Analisi AI"
           />
-          <DownloadPDFButton result={result} />
+
           <div className="results-section">
             {/* Box con il voto numerico reale estratto dal JSON */}
             {/* <div className="results-score-box">
@@ -297,6 +297,7 @@ function Dashboard({ session }) {
               scientifica del successo commerciale.
             </p>
           </div>
+          <DownloadPDFButton result={result} />
         </>
       )}
     </div>
