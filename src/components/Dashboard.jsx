@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { supabaseClient } from "../supabaseClient";
 import Loader from "./Loader";
 import DownloadPDFButton from "./DownloadPDFButton";
+import Score from "../../cassetto-degli-attrezzi/Score";
 
 function Dashboard({ session }) {
   const [idea, setIdea] = useState("");
@@ -88,15 +89,27 @@ function Dashboard({ session }) {
       {/* SEZIONE RISULTATI REALI: Mostrata solo se result contiene i dati di OpenAI */}
       {result && (
         <>
+          <Score
+            score={result.punteggio_generale}
+            verdict={result.sintesi}
+            status={
+              result.punteggio_generale >= 70
+                ? "ALTO POTENZIALE"
+                : result.punteggio_generale >= 40
+                  ? "POTENZIALE MODERATO"
+                  : "DA APPROFONDIRE"
+            }
+            benchmark="Analisi AI"
+          />
           <DownloadPDFButton result={result} />
           <div className="results-section">
             {/* Box con il voto numerico reale estratto dal JSON */}
-            <div className="results-score-box">
+            {/* <div className="results-score-box">
               <h3>Punteggio Generale: {result.punteggio_generale}/100</h3>
-            </div>
+            </div> */}
 
-            {/* Paragrafo descrittivo con la sintesi motivata dell'AI */}
-            <p className="results-summary">{result.sintesi}</p>
+            {/* Paragrafo descrittivo con la sintesi motivata dell'AI
+            <p className="results-summary">{result.sintesi}</p> */}
 
             {/* Griglia SWOT organizzata nei 4 quadranti accademici */}
             <div className="swot-grid">
