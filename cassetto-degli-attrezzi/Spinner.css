@@ -5,29 +5,10 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 22px;
-  letter-spacing: -0.005em;
-  color: var(--color-text);
-  background: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-  user-select: none;
-  overflow: hidden;
-}
+/* Rimossi da qui il reset globale (*, *::before, *::after con margin: 0),
+   html/body con height: 100% e le regole su body (overflow: hidden, user-select: none,
+   font, colore e sfondo): in un CSS di componente valevano per tutto il sito
+   e bloccavano lo scroll della pagina. Gli stili di base della pagina restano in index.css. */
 
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined";

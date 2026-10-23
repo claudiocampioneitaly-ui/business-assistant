@@ -1,0 +1,282 @@
+/* DashboardResults.css
+   Stili delle sezioni aggiunte alla Dashboard: sintesi, metriche, competitor,
+   valutazione GO / NO GO e suggerimenti.
+   Riutilizza le stesse variabili di index.css (come Score.css), quindi segue anche html.dark.
+   I colori rosso e ambra usano variabili con fallback: se in index.css esistono
+   --color-danger / --color-warning vengono usate quelle.
+*/
+
+/* ---------- Contenitore generico di sezione ---------- */
+.results-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md, 1rem);
+  width: 100%;
+  box-sizing: border-box;
+  margin-block: var(--space-lg, 1.5rem);
+  padding: var(--space-xl, 2rem);
+  color: var(--color-text, #1a1b22);
+  background: var(--color-surface, #ffffff);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border, #bbcabf) 55%, transparent);
+  border-radius: var(--radius-md, 1rem);
+}
+
+.results-block-title {
+  margin: 0;
+  color: var(--color-text, #1a1b22);
+  font-family: var(--font-heading, sans-serif);
+  font-size: var(--text-lg, 16px);
+  font-weight: var(--weight-semibold, 600);
+  line-height: var(--leading-snug, 1.35);
+}
+
+/* ---------- Sintesi dell'idea ---------- */
+.idea-summary {
+  max-width: 70ch; /* righe leggibili */
+  margin: 0;
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-normal, 1.6);
+}
+
+/* ---------- Metriche ---------- */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-md, 1rem);
+}
+
+/* Colore della metrica, impostato dalla classe metric--alto / --medio / --basso */
+.metric--alto {
+  --metric-color: var(--color-primary, #10b981);
+}
+.metric--medio {
+  --metric-color: var(--color-warning, #d97706);
+}
+.metric--basso {
+  --metric-color: var(--color-danger, #dc2626);
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm, 0.5rem);
+  min-width: 0;
+  padding: var(--space-md, 1rem);
+  background: var(--color-surface-alt, #f4f2fd);
+  border-radius: var(--radius-sm, 0.5rem);
+}
+
+.metric-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm, 0.5rem);
+}
+
+.metric-title {
+  margin: 0;
+  font-size: var(--text-md, 14px);
+  font-weight: var(--weight-semibold, 600);
+  line-height: var(--leading-snug, 1.35);
+}
+
+.metric-value {
+  flex-shrink: 0;
+  color: var(--metric-color);
+  font-family: var(--font-heading, sans-serif);
+  font-size: var(--text-xl, 20px);
+  font-weight: var(--weight-bold, 700);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-scale {
+  margin-left: 2px;
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-xs, 11px);
+  font-weight: var(--weight-regular, 400);
+}
+
+.metric-bar {
+  height: 6px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--metric-color) 15%, transparent);
+  border-radius: var(--radius-full, 9999px);
+}
+
+.metric-bar-fill {
+  height: 100%;
+  background: var(--metric-color);
+  border-radius: inherit;
+  transition: width 0.5s ease;
+}
+
+.metric-reason {
+  margin: 0;
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-sm, 12px);
+  line-height: var(--leading-normal, 1.6);
+}
+
+/* ---------- Competitor ---------- */
+.competitor-note,
+.competitor-empty {
+  margin: 0;
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-sm, 12px);
+  line-height: var(--leading-normal, 1.6);
+}
+
+/* Scroll orizzontale interno: la pagina non scorre di lato su mobile */
+.competitor-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.competitor-table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  font-size: var(--text-sm, 12px);
+  line-height: var(--leading-snug, 1.35);
+}
+
+.competitor-table th,
+.competitor-table td {
+  padding: var(--space-sm, 0.5rem) var(--space-md, 1rem);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-border, #bbcabf) 55%, transparent);
+}
+
+.competitor-table th {
+  color: var(--color-text-muted, #475569);
+  font-weight: var(--weight-semibold, 600);
+}
+
+.competitor-name {
+  font-weight: var(--weight-semibold, 600);
+}
+
+.badge-unverified,
+.badge-verified {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-xs, 11px);
+  font-weight: var(--weight-bold, 700);
+  white-space: nowrap;
+}
+
+.badge-unverified {
+  color: var(--color-warning, #b45309);
+  background: color-mix(
+    in srgb,
+    var(--color-warning, #d97706) 14%,
+    transparent
+  );
+  border: 1px dashed currentColor; /* il tratteggio distingue il badge anche senza colore */
+}
+
+.badge-verified {
+  color: var(--color-primary-hover, #006c49);
+  background: var(--color-primary-soft, #d1fae5);
+}
+
+/* ---------- Valutazione GO / NO GO ---------- */
+.final-verdict {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg, 1.5rem);
+  margin-block: var(--space-lg, 1.5rem);
+  padding: var(--space-lg, 1.5rem) var(--space-xl, 2rem);
+  border-radius: var(--radius-md, 1rem);
+  border: 2px solid var(--verdict-color);
+  background: color-mix(
+    in srgb,
+    var(--verdict-color) 10%,
+    var(--color-surface, #ffffff)
+  );
+}
+
+.final-verdict--go {
+  --verdict-color: var(--color-primary, #10b981);
+}
+
+.final-verdict--nogo {
+  --verdict-color: var(--color-danger, #dc2626);
+}
+
+.final-verdict-badge {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-sm, 0.5rem);
+  padding: var(--space-sm, 0.5rem) var(--space-md, 1rem);
+  color: #ffffff;
+  background: var(--verdict-color);
+  border-radius: var(--radius-full, 9999px);
+}
+
+.final-verdict-icon {
+  font-size: var(--text-lg, 16px);
+  font-weight: var(--weight-bold, 700);
+}
+
+.final-verdict-label {
+  font-family: var(--font-heading, sans-serif);
+  font-size: var(--text-xl, 20px);
+  font-weight: var(--weight-bold, 700);
+  white-space: nowrap;
+}
+
+.final-verdict-text {
+  margin: 0;
+  color: var(--color-text, #1a1b22);
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-normal, 1.6);
+}
+
+/* ---------- Suggerimenti ---------- */
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm, 0.5rem);
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-normal, 1.6);
+}
+
+.suggestions-list li::marker {
+  color: var(--color-primary-hover, #006c49);
+  font-weight: var(--weight-bold, 700);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .results-block {
+    padding: var(--space-lg, 1.5rem);
+  }
+
+  .final-verdict {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md, 1rem);
+    padding: var(--space-lg, 1.5rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .results-block {
+    padding: var(--space-md, 1rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-bar-fill {
+    transition: none;
+  }
+}
