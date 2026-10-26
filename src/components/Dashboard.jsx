@@ -4,7 +4,7 @@ import Loader from "./Loader";
 import DownloadPDFButton from "./DownloadPDFButton";
 import Score from "../../cassetto-degli-attrezzi/Score";
 // CSS Module: le classi di Dashboard.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
-import styles from "./Dashboard.module.css"; // Stili delle nuove sezioni (metriche, competitor, GO/NO GO, suggerimenti)
+import styles from "./style/Dashboard.module.css"; // Stili delle nuove sezioni (metriche, competitor, GO/NO GO, suggerimenti)
 
 // Classe di colore di una metrica in base al valore (verde / ambra / rosso)
 function livelloMetrica(valore) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { jsPDF } from "jspdf";
 // CSS Module: lo stile del bottone ora ha un file suo e vale SOLO qui
-import styles from "./DownloadPDFButton.module.css";
+import styles from "./style/DownloadPDFButton.module.css";
 
 function DownloadPDFButton({ result }) {
   const handleDownloadPDF = () => {

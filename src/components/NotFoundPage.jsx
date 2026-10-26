@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router";
 // CSS Module: le classi di NotFoundPage.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
-import styles from "./NotFoundPage.module.css";
+import styles from "./style/NotFoundPage.module.css";
 
 export default function NotFoundPage() {
   const { pathname } = useLocation();
