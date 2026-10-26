@@ -129,10 +129,18 @@
   outline-offset: 2px;
 }
 
+/* NUOVO: ora il bottone tema ha icona + testo, come il logout */
 .btn-theme {
   width: auto;
-  height: auto;
-  padding: var(--space-sm);
+  height: 2.25rem;
+  padding: 0 var(--space-md);
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.btn-theme .icon {
+  font-size: 18px;
 }
 
 .btn-logout {

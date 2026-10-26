@@ -258,12 +258,10 @@ Deno.serve(async (req) => {
     );
   }
 
-  if (!response.ok) {
+    if (!response.ok) {
     // I dettagli finiscono nei log della funzione (dashboard Supabase), non al browser
-    console.error(
-      `Provider AI ha risposto ${response.status}:`,
-      await response.text(),
-    );
+    // NUOVO: logghiamo solo lo status, non il corpo intero (i log sono condivisi col team)
+    console.error(`Provider AI ha risposto con status ${response.status}`);
     if (response.status === 429) {
       return jsonResponse(
         {
@@ -272,8 +270,9 @@ Deno.serve(async (req) => {
         429,
       );
     }
+    // NUOVO: niente codice HTTP del provider nel messaggio al client
     return jsonResponse(
-      { error: `Errore dal servizio AI (HTTP ${response.status}).` },
+      { error: "Il servizio AI ha avuto un problema, riprova tra poco." },
       502,
     );
   }

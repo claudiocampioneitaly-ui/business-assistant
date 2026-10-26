@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 // Importiamo l'istanza personalizzata che fa da ponte con il nostro backend Supabase
 import { supabaseClient } from "../supabaseClient";
 // Stile della schermata di accesso/registrazione: tutte le classi hanno il prefisso "auth-"
 // così non entrano in conflitto con quelle della Dashboard (.form-group, .error-message, ...)
 // CSS Module: le classi di Auth.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
 import styles from "./style/Auth.module.css";
+
+// NUOVO: traduce gli errori di Supabase in messaggi sicuri per l'utente.
+// Non mostriamo mai il messaggio originale: può contenere dettagli tecnici.
+function messaggioErroreAuth(err) {
+  const codice = err?.code || "";
+  const testo = (err?.message || "").toLowerCase();
+
+  if (codice === "invalid_credentials" || testo.includes("invalid login credentials"))
+    return "Email o password non corretti.";
+  if (codice === "email_not_confirmed" || testo.includes("email not confirmed"))
+    return "Devi prima confermare la tua email.";
+  if (codice === "weak_password" || testo.includes("password should be"))
+    return "La password è troppo debole: usa almeno 6 caratteri.";
+  if (err?.status === 429 || testo.includes("rate limit"))
+    return "Troppi tentativi, riprova tra qualche minuto.";
+
+  // Qualsiasi altro caso: messaggio generico
+  return "Si è verificato un errore durante l'autenticazione. Riprova.";
+}
 
 function Auth() {
   // 1. DICHIARAZIONE DEGLI STATI (La memoria a breve termine del componente)
@@ -16,10 +35,18 @@ function Auth() {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   // true = la password si vede in chiaro, false = è nascosta con i pallini
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    // NUOVO: "lucchetto" sincrono contro i doppi invii (useRef si aggiorna subito, senza aspettare il re-render)
+  const inCorsoRef = useRef(false);
 
   // 2. LOGICA DI INVIO DEI DATI A SUPABASE
   const handleSubmit = async (e) => {
     e.preventDefault(); // Blocca il comportamento nativo del browser
+    // NUOVO: preventDefault deve restare SEMPRE la prima riga, prima di qualsiasi return
+
+    // NUOVO: se una richiesta è già in corso, ignoriamo il nuovo invio
+    if (inCorsoRef.current) return;
+    inCorsoRef.current = true;
+
     setError(""); // Resetta i vecchi errori
     setSuccessMessage(""); // Resetta i vecchi messaggi di successo
     setLoadingSubmit(true); // Congela l'interfaccia
@@ -46,14 +73,16 @@ function Auth() {
       }
     } catch (err) {
       // --- GESTIONE DEGLI ERRORI ---
-      setError(
-        err.message || "Si è verificato un errore durante l'autenticazione.",
-      );
+      // NUOVO: messaggio "tradotto", mai quello grezzo di Supabase
+      setError(messaggioErroreAuth(err));
+      if (import.meta.env.DEV) console.error("Errore auth:", err); // NUOVO: dettagli solo in sviluppo
     } finally {
       // --- RIPRISTINO INTERFACCIA ---
+      inCorsoRef.current = false; // NUOVO: riapre il lucchetto, anche in caso di errore
       setLoadingSubmit(false);
     }
   };
+
 
   // Cambia vista tra login e registrazione: la usano sia i due bottoni in alto sia il link in fondo.
   // Ripulisce anche i messaggi, così un errore del login non resta visibile nella registrazione.

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { supabaseClient } from "../supabaseClient";
 import Loader from "./Loader";
 import DownloadPDFButton from "./DownloadPDFButton";
@@ -18,9 +18,24 @@ function Dashboard({ session }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
+  // NUOVO: "lucchetto" sincrono contro i doppi invii (useRef si aggiorna subito, senza aspettare il re-render)
+  const inCorsoRef = useRef(false);
+  // NUOVO: ricorda l'ultima idea valutata con successo, per non rifare la stessa richiesta
+  const ultimaIdeaRef = useRef("");
+ const handleSubmit = async (e) => {
     e.preventDefault(); // Blocca il refresh nativo della pagina del browser
+    // NUOVO: preventDefault deve restare SEMPRE la prima riga, prima di qualsiasi return
+
+    // NUOVO: stessa idea già valutata e risultato ancora a schermo → niente nuova chiamata all'AI
+    if (result && idea.trim() === ultimaIdeaRef.current) {
+      setError("Hai già valutato questa idea: modificala per una nuova analisi.");
+      return;
+    }
+
+    // NUOVO: se una richiesta è già in corso, ignoriamo il nuovo invio
+    if (inCorsoRef.current) return;
+    inCorsoRef.current = true;
+
     setError(""); // Ripulisce eventuali errori lasciati da tentativi passati
     setResult(null); // Resetta i risultati precedenti
     setLoading(true); // Attiva lo stato di caricamento
@@ -44,21 +59,26 @@ function Dashboard({ session }) {
       await timerMinimo;
 
       setResult(data);
+      ultimaIdeaRef.current = idea.trim(); // NUOVO: salviamo l'idea appena valutata
     } catch (err) {
-      let messaggio = err.message;
+      // NUOVO: messaggio generico di default, mai err.message (è tecnico, es. "non-2xx status code")
+      let messaggio =
+        "Si è verificato un errore durante la valutazione. Riprova tra poco.";
       if (err.context) {
         try {
           const body = await err.context.json();
+          // body.error contiene solo i messaggi scritti da noi nella Edge Function: sono sicuri
           messaggio = body.error || messaggio;
         } catch {}
       }
-      console.error("Errore evaluate-idea:", messaggio);
+      // NUOVO: il log tecnico solo in sviluppo (in produzione la console la vede chiunque)
+      if (import.meta.env.DEV) console.error("Errore evaluate-idea:", err);
       setError(messaggio);
     } finally {
+      inCorsoRef.current = false; // NUOVO: riapre il lucchetto, anche in caso di errore
       setLoading(false); // Sblocca l'interfaccia
     }
   };
-
   // Etichetta del livello di potenziale in base al Business Success Score (media delle 8 metriche)
   const livelloPotenziale = !result
     ? ""
@@ -95,9 +115,13 @@ function Dashboard({ session }) {
           />
         </div>
 
-        {error && <p className={styles["error-message"]}>{error}</p>}
+        {error && <p className={styles["error-message"]} role="alert">{error}</p>}
 
-        <button type="submit" disabled={loading} className={styles["btn-evaluate"]}>
+        <button
+          type="submit"
+          disabled={loading}
+          className={styles["btn-evaluate"]}
+        >
           {loading
             ? "Analisi in corso con OpenAI..."
             : "Valuta Idea Imprenditoriale"}
@@ -135,7 +159,9 @@ function Dashboard({ session }) {
 
             {/* OTTO METRICHE: titolo, valore e breve motivazione */}
             <section className={styles["results-block"]}>
-              <h3 className={styles["results-block-title"]}>Metriche di valutazione</h3>
+              <h3 className={styles["results-block-title"]}>
+                Metriche di valutazione
+              </h3>
               <div className={styles["metrics-grid"]}>
                 {result.metriche?.map((metrica) => (
                   <article
@@ -143,7 +169,9 @@ function Dashboard({ session }) {
                     className={`${styles["metric-card"]} ${styles[livelloMetrica(metrica.valore)]}`}
                   >
                     <div className={styles["metric-card-header"]}>
-                      <h4 className={styles["metric-title"]}>{metrica.titolo}</h4>
+                      <h4 className={styles["metric-title"]}>
+                        {metrica.titolo}
+                      </h4>
                       <span className={styles["metric-value"]}>
                         {metrica.valore}
                         <span className={styles["metric-scale"]}>/100</span>
@@ -165,7 +193,9 @@ function Dashboard({ session }) {
                       />
                     </div>
 
-                    <p className={styles["metric-reason"]}>{metrica.motivazione}</p>
+                    <p className={styles["metric-reason"]}>
+                      {metrica.motivazione}
+                    </p>
                   </article>
                 ))}
               </div>
@@ -191,7 +221,9 @@ function Dashboard({ session }) {
                 </ul>
               </div>
 
-              <div className={`${styles["swot-card"]} ${styles["opportunity"]}`}>
+              <div
+                className={`${styles["swot-card"]} ${styles["opportunity"]}`}
+              >
                 <h4>Opportunità</h4>
                 <ul>
                   {result.swot?.opportunita?.map((item, index) => (
@@ -213,7 +245,9 @@ function Dashboard({ session }) {
 
             {/* TABELLA COMPETITOR: fino a 3, sempre presentati come "da verificare" */}
             <section className={styles["results-block"]}>
-              <h3 className={styles["results-block-title"]}>Possibili competitor</h3>
+              <h3 className={styles["results-block-title"]}>
+                Possibili competitor
+              </h3>
               <p className={styles["competitor-note"]}>
                 Suggeriti dall'AI senza una ricerca aggiornata: verifica che
                 esistano e che le informazioni siano corrette prima di usarle.
@@ -234,7 +268,9 @@ function Dashboard({ session }) {
                     <tbody>
                       {result.competitor.map((c, index) => (
                         <tr key={index}>
-                          <td className={styles["competitor-name"]}>{c.nome}</td>
+                          <td className={styles["competitor-name"]}>
+                            {c.nome}
+                          </td>
                           <td>{c.attivita}</td>
                           <td>{c.punto_debole}</td>
                           <td>
@@ -268,10 +304,16 @@ function Dashboard({ session }) {
               aria-labelledby="final-verdict-title"
             >
               <div className={styles["final-verdict-badge"]}>
-                <span className={styles["final-verdict-icon"]} aria-hidden="true">
+                <span
+                  className={styles["final-verdict-icon"]}
+                  aria-hidden="true"
+                >
                   {isGo ? "✓" : "✕"}
                 </span>
-                <span id="final-verdict-title" className={styles["final-verdict-label"]}>
+                <span
+                  id="final-verdict-title"
+                  className={styles["final-verdict-label"]}
+                >
                   {isGo ? "GO" : "NO GO"}
                 </span>
               </div>
@@ -295,7 +337,8 @@ function Dashboard({ session }) {
             {/* Disclaimer obbligatorio richiesto dalle specifiche tecniche */}
             <p className={styles["disclaimer-text"]}>
               La valutazione AI è una stima motivata, non una previsione
-              scientifica del successo commerciale.
+              scientifica del successo commerciale. 
+              <br /> <a href="/Dashboard" style = {{color: "var(--color-primary)",lineHeight: "var(--leading-normal)",fontSize: "var(--text-md)"}}> Nuova analisi</a>
             </p>
           </div>
           <DownloadPDFButton result={result} />
