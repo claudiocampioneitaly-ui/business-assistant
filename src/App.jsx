@@ -8,7 +8,7 @@ import Header from "./components/Header";
 import Auth from "./components/Auth";
 import Dashboard from "./components/Dashboard";
 import Loader from "./components/Loader";
-import NotFoundPage from "./components/NotFoundPage";
+import NotFound from "./components/NotFoundPage";
 
 // HOME: Gestisce la schermata iniziale in base allo stato di autenticazione
 function HomeRoute({ session }) {
@@ -79,7 +79,7 @@ function App() {
           />
 
           {/* Rotta jolly: intercetta tutti gli URL non definiti e mostra la pagina 404 */}
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </>
