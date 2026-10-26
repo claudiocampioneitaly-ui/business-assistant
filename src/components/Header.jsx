@@ -28,10 +28,13 @@ function Header({ theme, toggleTheme, session }) {
       <div className={styles["header-inner"]}>
         {/* Sezione Logo / Brand */}
         <div className={styles["header-logo"]}>
-          <div className={styles["header-logo-icon"]}>
+        <div className={styles["header-logo-icon"]}>
+            <a href="/" style={{textDecoration:"none"}}>
             <span className={styles["icon"]}>terminal</span>
+          </a>
           </div>
-          <span className={styles["header-logo-name"]}>Business Assistant</span>
+          <a href="/" style={{textDecoration:"none"}}> <span className={styles["header-logo-name"]}>Business Assistant</span>
+          </a>
         </div>
 
         {/* Sezione Azioni (Pulsanti) */}
