@@ -1,0 +1,156 @@
+/* Icone Material Symbols (stesso set usato in code.html) */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+
+/* CSS Module: ogni classe qui sotto è locale a Header.jsx (nome "hashato"),
+   quindi nessun altro CSS del progetto può influenzarla e viceversa.
+   Colori, font, spaziature e raggi arrivano SOLO dalle variabili di index.css
+   (che restano globali), quindi light/dark (html.dark) funzionano da soli. */
+
+/* ---------- Icone ---------- */
+.icon {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  font-size: 20px;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ---------- Barra principale ---------- */
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 80rem;
+  height: 4rem;
+  margin: 0 auto;
+  padding: 0 var(--page-padding);
+}
+
+/* ---------- Brand ---------- */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.header-logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-full);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  color: var(--color-primary-hover);
+}
+
+.header-logo-name {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+}
+
+/* ---------- Azioni ---------- */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* base comune dei due pulsanti, con reset completo
+   (nel caso altri CSS globali stilizzino "button") */
+.btn-theme,
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  background-image: none;
+  box-shadow: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  line-height: 1;
+  text-transform: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease, transform 0.15s ease;
+}
+
+.btn-theme:hover,
+.btn-logout:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.btn-theme:active,
+.btn-logout:active {
+  transform: scale(0.98);
+}
+
+.btn-theme:focus-visible,
+.btn-logout:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.btn-theme {
+  width: auto;
+  height: auto;
+  padding: var(--space-sm);
+}
+
+.btn-logout {
+  width: auto;
+  height: 2.25rem;
+  padding: 0 var(--space-md);
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.btn-logout .icon {
+  font-size: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-theme,
+  .btn-logout {
+    transition: none;
+  }
+}

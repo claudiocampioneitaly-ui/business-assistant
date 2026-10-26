@@ -5,6 +5,7 @@ import { useAuth } from "./hooks/useAuth";
 import { getInitialTheme, applyTheme } from "./utils/themeHelper";
 
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Auth from "./components/Auth";
 import Dashboard from "./components/Dashboard";
 import Loader from "./components/Loader";
@@ -82,6 +83,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+
+      <Footer />
     </>
   );
 }
