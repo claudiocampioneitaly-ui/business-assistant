@@ -1,0 +1,319 @@
+/* (Mobile First)*/
+
+/* contenitore principale */
+.nf-main-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  /* Crea una barriera invalicabile per lo sfondo: l'header è salvo! */
+  isolation: isolate;
+  padding: var(--space-lg);
+}
+
+/*layout */
+.nf-page {
+  display: grid;
+  place-items: center; /* Centra la card sia in verticale che in orizzontale */
+  min-height: 90vh;
+  background: var(--color-bg);
+  box-sizing: border-box;
+}
+
+/* Il contenitore dello sfondo */
+.nf-viewport-content {
+  position: relative;
+  width: 100%;
+}
+
+/*  Il backdrop */
+.nf-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* LA GRIGLIA */
+.nf-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-size: 32px 32px;
+  background-image:
+    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+  opacity: 0.15;
+}
+
+/* alone luminoso */
+.nf-glow--top {
+  position: absolute;
+  top: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24rem;
+  height: 24rem;
+  z-index: 1;
+  background: var(--color-primary-soft);
+  filter: blur(110px);
+  border-radius: var(--radius-full);
+}
+
+/* LA CARD */
+.nf-shell {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-sizing: border-box;
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* Status Badge */
+.nf-status {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding: var(--space-xs) 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.nf-status-text {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+.nf-dot {
+  position: relative;
+  display: inline-flex;
+  width: 8px;
+  height: 8px;
+}
+.nf-dot-ping,
+.nf-dot-core {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+}
+.nf-dot-ping {
+  opacity: 0.75;
+  animation: nf-ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes nf-ping {
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* Hero */
+.nf-hero {
+  text-align: center;
+  margin: var(--space-xs) 0;
+}
+.nf-code {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  line-height: 1;
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.05em;
+  color: var(--color-text);
+  text-shadow: 0 0 35px var(--color-primary);
+}
+.nf-title {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+}
+.nf-desc {
+  max-width: 100%;
+  margin: 6px auto 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+}
+
+/* Card diagnostica */
+.nf-card {
+  position: relative;
+  margin-top: 1.25rem;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+.nf-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-primary),
+    transparent
+  );
+}
+.nf-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.nf-card-title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+.nf-card-sub {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* Terminale */
+.nf-terminal {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  overflow-x: auto;
+}
+.nf-terminal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+.nf-terminal-row--start {
+  justify-content: flex-start;
+}
+.nf-terminal code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+}
+.nf-accent {
+  color: var(--color-primary);
+  font-weight: var(--weight-medium);
+}
+.nf-sep {
+  height: 1px;
+  margin: 6px 0;
+  border: 0;
+  background: var(--color-border);
+}
+
+/* Bottoni */
+.nf-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+.nf-btn {
+  height: 2.5rem;
+  padding: 0 var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    transform 0.15s;
+}
+.nf-btn:active {
+  transform: scale(0.98);
+}
+.nf-btn--primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: var(--weight-bold);
+  box-shadow: 0 0 24px -4px var(--color-primary);
+}
+.nf-btn--primary:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Media Queries (Desktop Scaling)*/
+
+@media (min-width: 480px) {
+  .nf-page {
+    padding: var(--space-lg);
+  }
+  .nf-viewport-content {
+    max-width: 28rem;
+  }
+  .nf-backdrop {
+    position: absolute;
+  }
+  .nf-shell {
+    padding: var(--space-lg) var(--page-padding);
+  }
+  .nf-status {
+    margin-bottom: var(--space-lg);
+  }
+  .nf-hero {
+    margin: var(--space-sm) 0;
+  }
+  .nf-code {
+    font-size: var(--text-5xl);
+  }
+  .nf-title {
+    margin: 0.75rem 0 0;
+    font-size: var(--text-xl);
+  }
+  .nf-desc {
+    font-size: var(--text-sm);
+  }
+  .nf-card {
+    margin-top: 1.75rem;
+    padding: var(--space-md);
+  }
+  .nf-terminal {
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+  }
+  .nf-actions {
+    margin-top: 1.75rem;
+    gap: 0.75rem;
+  }
+  .nf-btn {
+    height: 2.75rem;
+    padding: 0 var(--space-lg);
+    font-size: var(--text-md);
+  }
+}

@@ -1,21 +1,49 @@
 /* (Mobile First)*/
 
+/* Solo quando la 404 è montata: il body usa lo stesso sfondo della pagina,
+   così header e 404 hanno un colore uniforme (niente cornice più chiara attorno) */
+body:has(.nf-main-container) {
+  background-color: var(--color-bg);
+}
+
+/* Solo sulla 404: #root diventa una colonna alta esattamente quanto lo schermo.
+   Header + pagina 404 si dividono i 100vh invece di sommarsi (niente scroll verticale) */
+#root:has(.nf-main-container) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Il <main> di App.jsx prende tutto lo spazio rimasto sotto l'header */
+#root:has(.nf-main-container) > main {
+  flex: 1;
+  display: flex;
+}
+
 /* contenitore principale */
 .nf-main-container {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  /* Prima era min-height: 100vh, che sommato all'header creava lo scroll verticale.
+     Ora riempie solo lo spazio lasciato libero dall'header */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   /* Crea una barriera invalicabile per lo sfondo: l'header è salvo! */
   isolation: isolate; 
   padding: var(--space-lg);
+  /* Il padding resta DENTRO il 100% di larghezza: niente scroll orizzontale */
+  box-sizing: border-box;
 }
 
 /*layout */
 .nf-page {
   display: grid;
   place-items: center; /* Centra la card sia in verticale che in orizzontale */
-  min-height: 90vh;
+  /* Prima era min-height: 90vh (fisso): ora occupa lo spazio del contenitore,
+     così la card resta centrata senza sforare su schermi bassi */
+  flex: 1;
   background: var(--color-bg);
   box-sizing: border-box;
 }

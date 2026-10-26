@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="it" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Business Assistant - Async States</title>
+
+    <link rel="stylesheet" href="../src/index.css" />
+    <link rel="stylesheet" href="loader.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&family=Hanken+Grotesk:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <main class="main">
+      <!-- CARICAMENTO -->
+      <section class="card loading" id="state-loading" aria-live="polite">
+        <!-- Ci serve -->
+        <!-- Ci serve tutto lo spinner quindi da qui  -->
+        <div class="spinner">
+          <div class="glow"></div>
+          <div class="ring-outer"></div>
+          <div class="ring-inner"></div>
+          <div class="core">
+            <span class="ping"></span>
+            <span class="material-symbols-outlined">memory</span>
+          </div>
+          <div class="orbit"><i></i></div>
+        </div>
+
+        <!-- a qui  -->
+        <!-- Da qui  -->
+        <div style="margin-top: 16px">
+          <h2 style="margin-top: 0">Stiamo analizzando la tua idea…</h2>
+          <p>
+            Elaborazione dei parametri di mercato e proiezioni finanziarie in
+            corso...
+          </p>
+        </div>
+        <!-- a qui -->
+
+        <div class="progress-panel">
+          <div class="log">
+            <!-- Da qui  -->
+            <div class="running">
+              <span class="material-symbols-outlined icon-sm">sync</span
+              ><span>Connessione ai modelli predittivi...</span>
+            </div>
+            <!-- a qui -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

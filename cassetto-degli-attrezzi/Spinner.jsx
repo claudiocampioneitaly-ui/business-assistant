@@ -1,21 +1,22 @@
-import "./Spinner.css";
+// CSS Module: le classi di Spinner.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
+import styles from "./Spinner.module.css";
 import "../src/index.css";
 
 function Spinner() {
   return (
-    <main className="main">
+    <main className={styles["main"]}>
       {/* CARICAMENTO */}
-      <section className="card loading" id="state-loading" aria-live="polite">
+      <section className={`${styles["card"]} ${styles["loading"]}`} id="state-loading" aria-live="polite">
         {/* Spinner: da qui */}
-        <div className="spinner">
-          <div className="glow"></div>
-          <div className="ring-outer"></div>
-          <div className="ring-inner"></div>
-          <div className="core">
-            <span className="ping"></span>
+        <div className={styles["spinner"]}>
+          <div className={styles["glow"]}></div>
+          <div className={styles["ring-outer"]}></div>
+          <div className={styles["ring-inner"]}></div>
+          <div className={styles["core"]}>
+            <span className={styles["ping"]}></span>
             <span className="material-symbols-outlined">memory</span>
           </div>
-          <div className="orbit">
+          <div className={styles["orbit"]}>
             <i></i>
           </div>
         </div>
@@ -31,11 +32,11 @@ function Spinner() {
         </div>
         {/* a qui */}
 
-        <div className="progress-panel">
-          <div className="log">
+        <div className={styles["progress-panel"]}>
+          <div className={styles["log"]}>
             {/* Riga di log: da qui */}
-            <div className="running">
-              <span className="material-symbols-outlined icon-sm">sync</span>
+            <div className={styles["running"]}>
+              <span className={`material-symbols-outlined ${styles["icon-sm"]}`}>sync</span>
               <span>Connessione ai modelli predittivi...</span>
             </div>
             {/* a qui */}

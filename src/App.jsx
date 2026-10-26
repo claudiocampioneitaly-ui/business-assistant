@@ -48,30 +48,6 @@ function App() {
 
   // 2. Gestione Modulo Autenticazione (Custom Hook)
   const { session, loading } = useAuth();
-  const [authVisualLoading, setAuthVisualLoading] = useState(false);
-
-  // Gestione del caricamento visivo dopo l'autenticazione
-  // Gestione del caricamento visivo dopo l'autenticazione
-  // Dipende dall'id dell'utente e non dall'oggetto session: Supabase crea una nuova session
-  // a ogni rinnovo del token, e senza questo accorgimento il Loader ripartirebbe
-  // smontando la Dashboard (con perdita del risultato dell'analisi)
-  const userId = session?.user?.id;
-
-  useEffect(() => {
-    if (userId) {
-      setAuthVisualLoading(true);
-
-      const timer = setTimeout(() => {
-        setAuthVisualLoading(false);
-      }, 1000);
-
-      // 1000 millisecondi tassativi
-      return () => clearTimeout(timer);
-    }
-
-    // Se non c'è una sessione, disattiviamo il caricamento visivo
-    setAuthVisualLoading(false);
-  }, [userId]);
 
   // Schermata di blocco durante il controllo iniziale del token o del refresh
   if (loading) {
@@ -81,15 +57,6 @@ function App() {
         style={{ padding: "2rem", textAlign: "center" }}
       >
         <p>Caricamento in corso...</p>
-      </div>
-    );
-  }
-
-  // Mostra lo spinner e impedisce l'accesso immediato alla Dashboard
-  if (authVisualLoading) {
-    return (
-      <div className="app-loader-wrapper" style={{ padding: "4rem 2rem" }}>
-        <Loader />
       </div>
     );
   }

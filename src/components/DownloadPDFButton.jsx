@@ -1,6 +1,7 @@
 import React from "react";
 import { jsPDF } from "jspdf";
-import "./Dashboard.css";
+// CSS Module: lo stile del bottone ora ha un file suo e vale SOLO qui
+import styles from "./DownloadPDFButton.module.css";
 
 function DownloadPDFButton({ result }) {
   const handleDownloadPDF = () => {
@@ -108,7 +109,7 @@ function DownloadPDFButton({ result }) {
     <button
       type="button"
       onClick={handleDownloadPDF}
-      className="btn-download-pdf"
+      className={styles["btn-download-pdf"]}
     >
       Scarica Report PDF Modificabile
     </button>

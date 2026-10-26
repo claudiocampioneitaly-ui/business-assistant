@@ -3,7 +3,8 @@ import { supabaseClient } from "../supabaseClient";
 import Loader from "./Loader";
 import DownloadPDFButton from "./DownloadPDFButton";
 import Score from "../../cassetto-degli-attrezzi/Score";
-import "./Dashboard.css"; // Stili delle nuove sezioni (metriche, competitor, GO/NO GO, suggerimenti)
+// CSS Module: le classi di Dashboard.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
+import styles from "./Dashboard.module.css"; // Stili delle nuove sezioni (metriche, competitor, GO/NO GO, suggerimenti)
 
 // Classe di colore di una metrica in base al valore (verde / ambra / rosso)
 function livelloMetrica(valore) {
@@ -71,16 +72,16 @@ function Dashboard({ session }) {
   const isGo = result?.valutazione_finale?.esito === "GO";
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
+    <div className={styles["dashboard-container"]}>
+      <div className={styles["dashboard-header"]}>
         <h2>Assistente Aziendale</h2>
         <p>
           Pronto per valutare la tua idea,{" "}
           <strong>{session?.user?.email}</strong>
         </p>
       </div>
-      <form onSubmit={handleSubmit} className="idea-form">
-        <div className="form-group">
+      <form onSubmit={handleSubmit} className={styles["idea-form"]}>
+        <div className={styles["form-group"]}>
           <label htmlFor="idea-input">La tua idea imprenditoriale</label>
           <textarea
             id="idea-input"
@@ -90,13 +91,13 @@ function Dashboard({ session }) {
             placeholder="Descrivi dettagliatamente il tuo progetto, il mercato di riferimento e il target di clienti..."
             required
             minLength={30}
-            className="idea-textarea"
+            className={styles["idea-textarea"]}
           />
         </div>
 
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className={styles["error-message"]}>{error}</p>}
 
-        <button type="submit" disabled={loading} className="btn-evaluate">
+        <button type="submit" disabled={loading} className={styles["btn-evaluate"]}>
           {loading
             ? "Analisi in corso con OpenAI..."
             : "Valuta Idea Imprenditoriale"}
@@ -110,9 +111,9 @@ function Dashboard({ session }) {
       {result && (
         <>
           {/* SINTESI DELL'IDEA: rielaborazione sintetica dell'input dell'utente */}
-          <section className="results-block">
-            <h3 className="results-block-title">Sintesi dell'idea</h3>
-            <p className="idea-summary">{result.sintesi_idea}</p>
+          <section className={styles["results-block"]}>
+            <h3 className={styles["results-block-title"]}>Sintesi dell'idea</h3>
+            <p className={styles["idea-summary"]}>{result.sintesi_idea}</p>
           </section>
 
           {/* BUSINESS SUCCESS SCORE: media delle 8 metriche, calcolata dalla Edge Function */}
@@ -123,35 +124,35 @@ function Dashboard({ session }) {
             benchmark="Analisi AI"
           />
 
-          <div className="results-section">
+          <div className={styles["results-section"]}>
             {/* Box con il voto numerico reale estratto dal JSON */}
-            {/* <div className="results-score-box">
+            {/* <div className={styles["results-score-box"]}>
               <h3>Punteggio Generale: {result.punteggio_generale}/100</h3>
             </div> */}
 
             {/* Paragrafo descrittivo con la sintesi motivata dell'AI
-            <p className="results-summary">{result.sintesi}</p> */}
+            <p className={styles["results-summary"]}>{result.sintesi}</p> */}
 
             {/* OTTO METRICHE: titolo, valore e breve motivazione */}
-            <section className="results-block">
-              <h3 className="results-block-title">Metriche di valutazione</h3>
-              <div className="metrics-grid">
+            <section className={styles["results-block"]}>
+              <h3 className={styles["results-block-title"]}>Metriche di valutazione</h3>
+              <div className={styles["metrics-grid"]}>
                 {result.metriche?.map((metrica) => (
                   <article
                     key={metrica.chiave}
-                    className={`metric-card ${livelloMetrica(metrica.valore)}`}
+                    className={`${styles["metric-card"]} ${styles[livelloMetrica(metrica.valore)]}`}
                   >
-                    <div className="metric-card-header">
-                      <h4 className="metric-title">{metrica.titolo}</h4>
-                      <span className="metric-value">
+                    <div className={styles["metric-card-header"]}>
+                      <h4 className={styles["metric-title"]}>{metrica.titolo}</h4>
+                      <span className={styles["metric-value"]}>
                         {metrica.valore}
-                        <span className="metric-scale">/100</span>
+                        <span className={styles["metric-scale"]}>/100</span>
                       </span>
                     </div>
 
                     {/* Barra di avanzamento proporzionale al valore */}
                     <div
-                      className="metric-bar"
+                      className={styles["metric-bar"]}
                       role="progressbar"
                       aria-valuenow={metrica.valore}
                       aria-valuemin={0}
@@ -159,20 +160,20 @@ function Dashboard({ session }) {
                       aria-label={metrica.titolo}
                     >
                       <div
-                        className="metric-bar-fill"
+                        className={styles["metric-bar-fill"]}
                         style={{ width: `${metrica.valore}%` }}
                       />
                     </div>
 
-                    <p className="metric-reason">{metrica.motivazione}</p>
+                    <p className={styles["metric-reason"]}>{metrica.motivazione}</p>
                   </article>
                 ))}
               </div>
             </section>
 
             {/* Griglia SWOT organizzata nei 4 quadranti accademici */}
-            <div className="swot-grid">
-              <div className="swot-card strength">
+            <div className={styles["swot-grid"]}>
+              <div className={`${styles["swot-card"]} ${styles["strength"]}`}>
                 <h4>Punti di Forza</h4>
                 <ul>
                   {result.swot?.punti_forza?.map((item, index) => (
@@ -181,7 +182,7 @@ function Dashboard({ session }) {
                 </ul>
               </div>
 
-              <div className="swot-card weakness">
+              <div className={`${styles["swot-card"]} ${styles["weakness"]}`}>
                 <h4>Debolezze</h4>
                 <ul>
                   {result.swot?.debolezze?.map((item, index) => (
@@ -190,7 +191,7 @@ function Dashboard({ session }) {
                 </ul>
               </div>
 
-              <div className="swot-card opportunity">
+              <div className={`${styles["swot-card"]} ${styles["opportunity"]}`}>
                 <h4>Opportunità</h4>
                 <ul>
                   {result.swot?.opportunita?.map((item, index) => (
@@ -200,7 +201,7 @@ function Dashboard({ session }) {
               </div>
 
               {/* Il quadrante "Rischi" ora si chiama "Minacce" come da specifiche; la classe CSS resta "risk" */}
-              <div className="swot-card risk">
+              <div className={`${styles["swot-card"]} ${styles["risk"]}`}>
                 <h4>Minacce</h4>
                 <ul>
                   {result.swot?.minacce?.map((item, index) => (
@@ -211,17 +212,17 @@ function Dashboard({ session }) {
             </div>
 
             {/* TABELLA COMPETITOR: fino a 3, sempre presentati come "da verificare" */}
-            <section className="results-block">
-              <h3 className="results-block-title">Possibili competitor</h3>
-              <p className="competitor-note">
+            <section className={styles["results-block"]}>
+              <h3 className={styles["results-block-title"]}>Possibili competitor</h3>
+              <p className={styles["competitor-note"]}>
                 Suggeriti dall'AI senza una ricerca aggiornata: verifica che
                 esistano e che le informazioni siano corrette prima di usarle.
               </p>
 
               {result.competitor?.length > 0 ? (
                 // Il wrapper permette lo scroll orizzontale della tabella su schermi stretti
-                <div className="competitor-table-wrapper">
-                  <table className="competitor-table">
+                <div className={styles["competitor-table-wrapper"]}>
+                  <table className={styles["competitor-table"]}>
                     <thead>
                       <tr>
                         <th scope="col">Nome</th>
@@ -233,7 +234,7 @@ function Dashboard({ session }) {
                     <tbody>
                       {result.competitor.map((c, index) => (
                         <tr key={index}>
-                          <td className="competitor-name">{c.nome}</td>
+                          <td className={styles["competitor-name"]}>{c.nome}</td>
                           <td>{c.attivita}</td>
                           <td>{c.punto_debole}</td>
                           <td>
@@ -241,8 +242,8 @@ function Dashboard({ session }) {
                             <span
                               className={
                                 c.verificato
-                                  ? "badge-verified"
-                                  : "badge-unverified"
+                                  ? styles["badge-verified"]
+                                  : styles["badge-unverified"]
                               }
                             >
                               {c.verificato ? "Verificato" : "Da verificare"}
@@ -254,7 +255,7 @@ function Dashboard({ session }) {
                   </table>
                 </div>
               ) : (
-                <p className="competitor-empty">
+                <p className={styles["competitor-empty"]}>
                   L'AI non ha individuato competitor pertinenti: prova a cercare
                   alternative esistenti con una ricerca di mercato.
                 </p>
@@ -263,28 +264,28 @@ function Dashboard({ session }) {
 
             {/* VALUTAZIONE CONCLUSIVA GO / NO GO: colore verde/rosso sempre accompagnato da testo e icona */}
             <section
-              className={`final-verdict ${isGo ? "final-verdict--go" : "final-verdict--nogo"}`}
+              className={`${styles["final-verdict"]} ${isGo ? styles["final-verdict--go"] : styles["final-verdict--nogo"]}`}
               aria-labelledby="final-verdict-title"
             >
-              <div className="final-verdict-badge">
-                <span className="final-verdict-icon" aria-hidden="true">
+              <div className={styles["final-verdict-badge"]}>
+                <span className={styles["final-verdict-icon"]} aria-hidden="true">
                   {isGo ? "✓" : "✕"}
                 </span>
-                <span id="final-verdict-title" className="final-verdict-label">
+                <span id="final-verdict-title" className={styles["final-verdict-label"]}>
                   {isGo ? "GO" : "NO GO"}
                 </span>
               </div>
-              <p className="final-verdict-text">
+              <p className={styles["final-verdict-text"]}>
                 {result.valutazione_finale?.spiegazione}
               </p>
             </section>
 
             {/* TRE SUGGERIMENTI OPERATIVI per validare o migliorare l'idea */}
-            <section className="results-block">
-              <h3 className="results-block-title">
+            <section className={styles["results-block"]}>
+              <h3 className={styles["results-block-title"]}>
                 Prossimi passi consigliati
               </h3>
-              <ol className="suggestions-list">
+              <ol className={styles["suggestions-list"]}>
                 {result.suggerimenti?.map((suggerimento, index) => (
                   <li key={index}>{suggerimento}</li>
                 ))}
@@ -292,7 +293,7 @@ function Dashboard({ session }) {
             </section>
 
             {/* Disclaimer obbligatorio richiesto dalle specifiche tecniche */}
-            <p className="disclaimer-text">
+            <p className={styles["disclaimer-text"]}>
               La valutazione AI è una stima motivata, non una previsione
               scientifica del successo commerciale.
             </p>

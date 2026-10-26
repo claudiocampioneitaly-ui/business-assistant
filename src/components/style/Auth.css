@@ -1,0 +1,605 @@
+/* Auth.css
+   Stile della schermata di accesso e registrazione.
+   Usa solo le variabili di :root in index.css (segue anche html.dark), come Dashboard.css.
+   Tutte le classi hanno il prefisso "auth-": nessun conflitto con le classi della Dashboard
+   (.form-group, .error-message, ...), in nessuna delle due direzioni.
+   Le icone dei campi (mail, lock, visibility) sono Material Symbols: il font va incluso in index.html.
+
+   Animazioni:
+   - sfondo con griglia di puntini e due aloni verdi che si muovono lentamente
+   - entrata della card con la linea verde in alto che si allarga
+   - selettore Login / Registrazione con la pillola verde che scorre sotto il bottone attivo
+   - comparsa a cascata di titolo, campi e bottoni
+   - label e icona del campo che si colorano quando il campo è attivo
+   - bottone che si solleva al passaggio, si "preme" al click e mostra uno spinner durante l'attesa
+   - sottolineatura animata del link "Registrati / Accedi"
+   - errore che vibra, messaggio di successo che scende
+   Tutte disattivate con "riduci movimento" del sistema operativo (in fondo al file).
+*/
+
+/* ---------- Pagina a tutto schermo ---------- */
+/* La pagina occupa almeno tutto lo schermo: l'header in alto prende la sua altezza,
+   .auth-container (flex: 1) riempie lo spazio rimasto fino in fondo.
+   Le regole valgono solo mentre il login è mostrato (:has(.auth-container)),
+   quindi la Dashboard non cambia e index.css resta com'è. */
+
+/* #root è alto esattamente quanto lo schermo: header + login ci stanno dentro senza scroll */
+#root:has(.auth-container) {
+  min-height: 100vh; /* fallback per i browser che non conoscono dvh */
+  min-height: 100dvh; /* su mobile esclude la barra del browser, che a volte copre la pagina */
+}
+
+/* #root e ogni contenitore tra #root e il login (es. il div o il <main> di App.jsx)
+   diventano colonne flex: così l'altezza dello schermo arriva fino a .auth-container,
+   invece di essere data a un contenitore interno che si sommerebbe all'header */
+#root:has(.auth-container),
+#root :has(.auth-container) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* gli altri figli (titolo, bottone del tema) restano larghi quanto il loro contenuto */
+  box-sizing: border-box; /* eventuali padding/bordi restano dentro l'altezza, senza allungare la pagina */
+}
+
+/* I contenitori intermedi riempiono lo spazio rimasto, a tutta larghezza */
+#root :has(.auth-container) {
+  flex: 1;
+  align-self: stretch;
+}
+
+/* ---------- Contenitore: card centrata nella pagina ---------- */
+.auth-container {
+  position: relative;
+  isolation: isolate; /* i livelli dello sfondo (z-index: -1) restano dietro alla card, dentro il contenitore */
+  display: grid;
+  place-items: center;
+  flex: 1; /* occupa tutto lo spazio sotto l'header fino al fondo dello schermo, senza bloccare lo scroll */
+  align-self: stretch; /* a tutta larghezza, anche se gli altri figli della pagina non lo sono */
+  min-height: 80vh; /* fallback: se la regola :has() sopra non si applica, centra comunque la card */
+  box-sizing: border-box;
+  padding: var(--space-xl) var(--page-padding);
+  overflow: hidden; /* taglia solo gli aloni che escono dal contenitore, non blocca lo scroll */
+  background: var(--color-bg);
+}
+
+/* ---------- Sfondo ---------- */
+/* Livello 1: griglia di puntini che sfuma verso i bordi */
+.auth-container::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-text) 14%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    #000 20%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+  content: "";
+}
+
+/* Livello 2: due aloni verdi morbidi che si spostano lentamente */
+.auth-container::after {
+  position: absolute;
+  inset: -25%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      color-mix(in srgb, var(--color-primary) 22%, transparent),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 70% 70%,
+      color-mix(in srgb, var(--color-primary-hover) 16%, transparent),
+      transparent 35%
+    );
+  animation: auth-glow-drift 18s ease-in-out infinite alternate;
+  content: "";
+}
+
+.auth-form {
+  position: relative; /* serve alla linea verde animata (::before) */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+  max-width: 26rem;
+  box-sizing: border-box;
+  padding: var(--space-xl);
+  overflow: hidden;
+  color: var(--color-text);
+  /* Effetto vetro: la card lascia intravedere lo sfondo sfocato */
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px -24px
+    color-mix(in srgb, var(--color-text) 25%, transparent);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  animation: auth-card-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Linea verde in alto (stesso accento della card dello Score): si allarga dal centro all'entrata */
+.auth-form::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--color-primary);
+  transform-origin: center;
+  animation: auth-line-grow 0.6s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  content: "";
+}
+
+/* Comparsa a cascata dei figli del form: ognuno parte 60ms dopo il precedente.
+   --i indica la posizione; i messaggi hanno animazioni proprie, definite più sotto. */
+.auth-form > * {
+  animation: auth-fade-up 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(0.15s + var(--i, 0) * 60ms);
+}
+.auth-form > :nth-child(1) {
+  --i: 0;
+}
+.auth-form > :nth-child(2) {
+  --i: 1;
+}
+.auth-form > :nth-child(3) {
+  --i: 2;
+}
+.auth-form > :nth-child(4) {
+  --i: 3;
+}
+.auth-form > :nth-child(5) {
+  --i: 4;
+}
+.auth-form > :nth-child(6) {
+  --i: 5;
+}
+.auth-form > :nth-child(7) {
+  --i: 6;
+}
+
+/* ---------- Selettore Login / Registrazione ---------- */
+.auth-tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+/* Pillola verde: parte sotto "Login" e scorre sotto "Registrazione" */
+.auth-tabs::before {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  content: "";
+}
+
+.auth-tabs--register::before {
+  transform: translateX(100%);
+}
+
+.auth-tab {
+  position: relative;
+  z-index: 1; /* il testo resta sopra la pillola */
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.auth-tab:hover:not(.auth-tab--active):not(:disabled) {
+  color: var(--color-text);
+}
+
+/* Bottone attivo: stesso testo del bottone verde "Accedi" */
+.auth-tab--active {
+  color: var(--color-on-primary);
+  cursor: default;
+}
+
+.auth-tab:disabled {
+  cursor: not-allowed;
+}
+
+.auth-tab:focus-visible {
+  outline: 3px solid var(--color-primary-soft);
+  outline-offset: 2px;
+}
+
+.auth-title {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+}
+
+/* ---------- Campi ---------- */
+.auth-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.auth-label {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  transition: color 0.2s ease;
+}
+
+/* La label si colora di verde quando il suo campo è attivo */
+.auth-form-group:focus-within .auth-label {
+  color: var(--color-primary-hover);
+}
+
+/* Input come la textarea della Dashboard */
+.auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.auth-input:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(
+    in srgb,
+    var(--color-primary) 50%,
+    var(--color-border)
+  );
+}
+
+.auth-input:focus {
+  outline: none;
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.auth-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Autocompilazione di Chrome: senza questo gli input diventano azzurri/bianchi, anche nel tema scuro */
+.auth-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg) inset;
+  -webkit-text-fill-color: var(--color-text);
+  caret-color: var(--color-text);
+}
+
+/* ---------- Campi con icone (email e password) ---------- */
+/* Contenitore dell'input: le icone sono posizionate sopra, ai due lati */
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Spazio interno per non far finire il testo sotto le icone: lucchetto a sinistra, occhio a destra */
+.auth-input--with-icons {
+  padding-left: 2.5rem;
+  padding-right: 2.75rem;
+}
+
+/* Spazio interno solo a sinistra: campi con un'icona e nessun bottone a destra (es. email) */
+.auth-input--with-icon-left {
+  padding-left: 2.5rem;
+}
+
+/* Dimensione delle icone Material Symbols */
+.auth-input-wrapper .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* Icona a sinistra (busta, lucchetto): diventa verde come la label quando il campo è attivo */
+.auth-input-icon {
+  position: absolute;
+  left: 0.875rem;
+  color: var(--color-text-muted);
+  pointer-events: none; /* il click passa all'input sotto */
+  transition: color 0.2s ease;
+}
+
+.auth-input-wrapper:focus-within .auth-input-icon {
+  color: var(--color-primary-hover);
+}
+
+/* Bottone "occhio" a destra */
+.auth-password-toggle {
+  position: absolute;
+  right: 0.875rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.auth-password-toggle:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.auth-password-toggle:focus-visible {
+  outline: 3px solid var(--color-primary-soft);
+  outline-offset: 2px;
+}
+
+.auth-password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ---------- Messaggi ---------- */
+.auth-error-message,
+.auth-success-message {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+}
+
+/* L'errore entra e vibra leggermente (riparte a ogni errore diverso grazie al key nel JSX) */
+.auth-error-message {
+  color: var(--color-error);
+  background: var(--color-error-soft);
+  animation: auth-shake 0.45s ease both;
+}
+
+/* Il messaggio di successo scende dall'alto */
+.auth-success-message {
+  color: var(--color-primary-hover);
+  background: var(--color-primary-soft);
+  animation: auth-slide-down 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* ---------- Bottoni ---------- */
+/* Bottone principale: uguale a "Valuta Idea Imprenditoriale", ma a tutta larghezza */
+.auth-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Al passaggio si solleva di poco con un alone verde */
+.auth-btn-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -6px
+    color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+/* Al click si "preme" */
+.auth-btn-submit:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+.auth-btn-submit:disabled {
+  cursor: progress;
+  opacity: 0.8;
+}
+
+/* Spinner accanto ad "Attendere...": il bottone è disabilitato solo durante l'invio */
+.auth-btn-submit:disabled::before {
+  width: 1em;
+  height: 1em;
+  box-sizing: border-box;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--radius-full);
+  animation: auth-spin 0.7s linear infinite;
+  content: "";
+}
+
+/* Cambio vista login/registrazione: link testuale, non un secondo bottone pieno */
+.auth-btn-toggle {
+  align-self: center;
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--color-primary-hover);
+  /* Sottolineatura disegnata come sfondo: parte da 0 e si allarga al passaggio */
+  background: linear-gradient(currentColor, currentColor) no-repeat center
+    bottom / 0% 1px;
+  border: none;
+  border-radius: 0;
+  font: inherit;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background-size 0.25s ease;
+}
+
+.auth-btn-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.auth-btn-toggle:hover:not(:disabled) {
+  background-size: calc(100% - 2 * var(--space-sm)) 1px;
+}
+
+/* Focus da tastiera visibile su entrambi i bottoni */
+.auth-btn-submit:focus-visible,
+.auth-btn-toggle:focus-visible {
+  outline: 3px solid var(--color-primary-soft);
+  outline-offset: 2px;
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes auth-glow-drift {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(6%, -4%) rotate(12deg);
+  }
+}
+
+@keyframes auth-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-line-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes auth-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-shake {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes auth-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Responsive ---------- */
+/* Smartphone stretti: meno padding, la card usa tutto lo spazio */
+@media (max-width: 420px) {
+  .auth-container {
+    padding-inline: var(--space-md);
+  }
+
+  .auth-form {
+    padding: var(--space-lg);
+  }
+}
+
+/* Con "riduci movimento" attivo restano solo i cambi di colore, senza spostamenti.
+   Lo spinner rallenta invece di fermarsi, così l'attesa resta visibile. */
+@media (prefers-reduced-motion: reduce) {
+  .auth-container::after,
+  .auth-form,
+  .auth-form::before,
+  .auth-form > *,
+  .auth-error-message,
+  .auth-success-message {
+    animation: none;
+  }
+
+  .auth-btn-submit:hover:not(:disabled),
+  .auth-btn-submit:active:not(:disabled) {
+    transform: none;
+  }
+
+  .auth-btn-submit:disabled::before {
+    animation-duration: 1.5s;
+  }
+
+  .auth-input,
+  .auth-input-icon,
+  .auth-password-toggle,
+  .auth-btn-submit,
+  .auth-btn-toggle,
+  .auth-tabs::before,
+  .auth-tab {
+    transition: none;
+  }
+}

@@ -1,0 +1,63 @@
+/* Stile bottone download PDF */
+
+/* DownloadPDFButton.css
+   Stile del bottone "Scarica Report PDF".
+   Usa solo le variabili di :root in index.css (segue anche html.dark), come Dashboard.css e Score.css.
+   È un bottone secondario (contorno verde) per non competere con il bottone principale
+   "Valuta Idea Imprenditoriale", che è pieno.
+*/
+
+/* DownloadPDFButton.css
+   Stile del bottone "Scarica Report PDF".
+   Usa solo le variabili di :root in index.css (segue anche html.dark), come Dashboard.css e Score.css.
+   Ha lo stesso aspetto del bottone di invio del form (.btn-evaluate in Dashboard.css):
+   sfondo verde pieno e testo --color-on-primary.
+*/
+
+.btn-download-pdf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  align-self: center; /* allineato a destra nella colonna flex della Dashboard */
+  padding: var(--space-md) var(--space-lg);
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover come il bottone di invio */
+.btn-download-pdf:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+/* Focus da tastiera visibile, come per gli altri bottoni */
+.btn-download-pdf:focus-visible {
+  outline: 3px solid var(--color-primary-soft);
+  outline-offset: 2px;
+}
+
+.btn-download-pdf:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Smartphone: bottone a tutta larghezza, più facile da toccare */
+@media (max-width: 560px) {
+  .btn-download-pdf {
+    align-self: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-download-pdf {
+    transition: none;
+  }
+}

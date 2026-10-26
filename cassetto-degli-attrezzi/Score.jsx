@@ -1,5 +1,6 @@
 import React from "react";
-import "./Score.css";
+// CSS Module: le classi di Score.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
+import styles from "./Score.module.css";
 import "../src/index.css";
 
 function Score({
@@ -21,13 +22,13 @@ function Score({
 
   return (
     <section
-      className="business-score-card"
+      className={styles["business-score-card"]}
       aria-labelledby="business-score-title"
     >
-      <div className="business-score-header">
+      <div className={styles["business-score-header"]}>
         <h2
           id="business-score-title"
-          className="business-score-title"
+          className={styles["business-score-title"]}
         >
           Business Success Score
         </h2>
@@ -35,22 +36,22 @@ function Score({
 
       </div>
 
-      <div className="business-score-content">
+      <div className={styles["business-score-content"]}>
         <div
-          className="business-score-gauge"
+          className={styles["business-score-gauge"]}
           role="img"
           aria-label={`Punteggio di successo: ${normalizedScore} su 100`}
         >
           <svg viewBox="0 0 120 120" aria-hidden="true">
             <circle
-              className="business-score-gauge-track"
+              className={styles["business-score-gauge-track"]}
               cx="60"
               cy="60"
               r="50"
             />
 
             <circle
-              className="business-score-gauge-progress"
+              className={styles["business-score-gauge-progress"]}
               cx="60"
               cy="60"
               r="50"
@@ -59,31 +60,31 @@ function Score({
             />
           </svg>
 
-          <div className="business-score-gauge-value">
-            <span className="business-score-number">
+          <div className={styles["business-score-gauge-value"]}>
+            <span className={styles["business-score-number"]}>
               {normalizedScore}
             </span>
 
-            <span className="business-score-scale">
+            <span className={styles["business-score-scale"]}>
               / 100
             </span>
           </div>
         </div>
 
-        <div className="business-score-verdict">
-          <h3 className="business-score-verdict-title">
+        <div className={styles["business-score-verdict"]}>
+          <h3 className={styles["business-score-verdict-title"]}>
             Valutazione AI
           </h3>
 
-          <p className="business-score-verdict-text">
+          <p className={styles["business-score-verdict-text"]}>
             {verdict}
           </p>
         </div>
       </div>
 
-      <div className="business-score-footer">
+      <div className={styles["business-score-footer"]}>
   {confidence != null && (
-    <span className="business-score-confidence">
+    <span className={styles["business-score-confidence"]}>
       Confidenza statistica:{" "}
       {Number(confidence).toLocaleString("it-IT", {
         maximumFractionDigits: 1,
@@ -92,7 +93,7 @@ function Score({
     </span>
   )}
 
-  <span className="business-score-benchmark">
+  <span className={styles["business-score-benchmark"]}>
     {benchmark}
   </span>
 </div>

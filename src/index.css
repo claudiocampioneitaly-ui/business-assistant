@@ -44,6 +44,8 @@
   /* --- Font family (solo 2 font in tutto il design) --- */
   --font-heading: "Hanken Grotesk", sans-serif;
   --font-body: "Geist", sans-serif;
+  /* Font monospaziato per testi "da terminale" (spinner, pagina 404): prima era in Spinner.css */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* --- Dimensioni testo --- */
   --text-xs: 11px;    /* label piccole, badge maiuscoli */
@@ -123,3 +125,63 @@ body {
 }
 
 
+/* =====================================================================
+   REGOLE GLOBALI
+   index.css è l'unico file CSS che vale per tutto il sito.
+   Gli altri CSS sono CSS Modules (*.module.css): le loro classi valgono solo
+   nel componente che li importa. Le regole qui sotto erano nei CSS dei componenti
+   ma toccavano elementi di tutto il sito, quindi sono state spostate qui.
+   ===================================================================== */
+
+/* Layout dell'app (prima in NotFoundPage.css e Auth.css, ognuno con la sua versione):
+   #root è una colonna alta almeno quanto lo schermo, l'header prende la sua altezza
+   e il <main> di App.jsx riempie lo spazio rimasto. Così una pagina che deve occupare
+   tutto lo schermo (login, 404) usa flex: 1 invece di 100vh, che si sommerebbe all'header
+   e creerebbe lo scroll verticale. Le pagine più lunghe dello schermo (Dashboard) scorrono normalmente. */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* fallback per i browser che non conoscono dvh */
+  min-height: 100dvh; /* su mobile esclude la barra del browser, che a volte copre la pagina */
+}
+
+#root > main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pagina 404 (prima in NotFoundPage.css): il body usa lo stesso sfondo della pagina,
+   così header e 404 hanno un colore uniforme. Con i CSS Modules la classe della 404
+   ha un nome con hash, quindi si usa l'attributo data-page="not-found" di NotFoundPage.jsx */
+body:has([data-page="not-found"]) {
+  background-color: var(--color-bg);
+}
+
+/* Icone Material Symbols (prima in Spinner.css): la classe arriva dal font di Google
+   in index.html ed è usata sia da Spinner.jsx sia da Auth.jsx, quindi resta globale */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* "Riduci movimento" del sistema operativo (prima in Spinner.css): ferma le animazioni
+   di tutto il sito, quindi è una regola globale */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
