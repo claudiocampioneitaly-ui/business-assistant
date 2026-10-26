@@ -1,0 +1,259 @@
+  /* BusinessSuccessScore.css
+   Stili isolati per il componente BusinessSuccessScore.
+   Riutilizza le variabili definite in index.css e supporta html.dark.
+*/
+
+.business-score-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg, 1.5rem);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: var(--space-xl, 2rem);
+  overflow: hidden;
+  color: var(--color-text, #1a1b22);
+  background: var(--color-surface, #ffffff);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border, #bbcabf) 55%, transparent);
+  border-radius: var(--radius-md, 1rem);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 5%);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.business-score-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--color-primary-hover, #006c49);
+  content: "";
+}
+
+.business-score-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md, 1rem);
+  min-width: 0;
+}
+
+.business-score-title {
+  min-width: 0;
+  margin: 0;
+  color: var(--color-text-muted, #475569);
+  font-family: var(--font-heading, sans-serif);
+  font-size: var(--text-sm, 12px);
+  font-weight: var(--weight-semibold, 600);
+  letter-spacing: var(--tracking-wide, 0.04em);
+  line-height: var(--leading-snug, 1.35);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.business-score-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.4rem 0.7rem;
+  color: var(--color-primary-hover, #006c49);
+  background: var(--color-primary-soft, #d1fae5);
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary, #10b981) 35%, transparent);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-xs, 11px);
+  font-weight: var(--weight-bold, 700);
+  letter-spacing: var(--tracking-normal, 0);
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.business-score-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl, 2rem);
+  width: 100%;
+  min-width: 0;
+}
+
+.business-score-gauge {
+  position: relative;
+  flex: 0 0 9rem;
+  width: 9rem;
+  max-width: 100%;
+  aspect-ratio: 1;
+}
+
+.business-score-gauge svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: rotate(-90deg);
+}
+
+.business-score-gauge-track {
+  fill: none;
+  stroke: var(--color-surface-alt, #f4f2fd);
+  stroke-width: 10;
+}
+
+.business-score-gauge-progress {
+  fill: none;
+  stroke: var(--color-primary, #10b981);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.business-score-gauge-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.business-score-number {
+  color: var(--color-text, #1a1b22);
+  font-family: var(--font-heading, sans-serif);
+  font-size: var(--text-5xl, 36px);
+  font-weight: var(--weight-bold, 700);
+  letter-spacing: var(--tracking-tight, -0.02em);
+  line-height: var(--leading-tight, 1.2);
+  font-variant-numeric: tabular-nums;
+}
+
+.business-score-scale {
+  margin-top: var(--space-xs, 0.25rem);
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-sm, 12px);
+  line-height: var(--leading-snug, 1.35);
+}
+
+.business-score-verdict {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.business-score-verdict-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 0.5rem);
+  margin: 0 0 var(--space-sm, 0.5rem);
+  color: var(--color-primary-hover, #006c49);
+  font-family: var(--font-heading, sans-serif);
+  font-size: var(--text-sm, 12px);
+  font-weight: var(--weight-bold, 700);
+  letter-spacing: var(--tracking-wide, 0.04em);
+  line-height: var(--leading-snug, 1.35);
+  text-transform: uppercase;
+}
+
+.business-score-verdict-text {
+  margin: 0;
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-normal, 1.6);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.business-score-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md, 1rem);
+  min-width: 0;
+  padding-top: var(--space-md, 1rem);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-border, #bbcabf) 55%, transparent);
+  color: var(--color-text-muted, #475569);
+  font-size: var(--text-sm, 12px);
+  line-height: var(--leading-snug, 1.35);
+}
+
+.business-score-confidence {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.business-score-benchmark {
+  max-width: 100%;
+  color: var(--color-primary-hover, #006c49);
+  font-weight: var(--weight-semibold, 600);
+  overflow-wrap: anywhere;
+}
+
+/* Tablet e finestre strette */
+@media (max-width: 600px) {
+  .business-score-card {
+    gap: var(--space-md, 1rem);
+    padding: var(--space-lg, 1.5rem);
+  }
+
+  .business-score-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-lg, 1.5rem);
+  }
+
+  .business-score-gauge {
+    flex: 0 1 auto;
+    width: min(9rem, 100%);
+    margin-inline: auto;
+  }
+
+  .business-score-number {
+    font-size: var(--text-4xl, 28px);
+  }
+
+  .business-score-verdict {
+    width: 100%;
+  }
+
+  .business-score-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-sm, 0.5rem);
+  }
+}
+
+/* Smartphone stretti */
+@media (max-width: 420px) {
+  .business-score-card {
+    padding: var(--space-md, 1rem);
+  }
+
+  .business-score-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .business-score-gauge {
+    width: min(8rem, 100%);
+  }
+
+  .business-score-status {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .business-score-card,
+  .business-score-gauge-progress {
+    transition: none;
+  }
+}
