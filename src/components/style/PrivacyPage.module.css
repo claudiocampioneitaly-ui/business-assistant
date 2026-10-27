@@ -1,0 +1,123 @@
+/* CSS Module: ogni classe è locale a PrivacyPage.jsx (nome "hashato"),
+   quindi nessun altro CSS del progetto può influenzarla.
+   Colori, font e spaziature arrivano SOLO dalle variabili di index.css,
+   quindi light/dark (html.dark) funzionano da soli. */
+
+/* contenitore della pagina: occupa lo spazio tra header e footer */
+.privacy-container {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-xl) var(--page-padding);
+  background-color: var(--color-bg);
+}
+
+/* colonna di lettura: righe corte = testo più facile da leggere */
+.privacy-article {
+  max-width: 42rem;
+  margin: 0 auto;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+}
+
+.privacy-header {
+  margin-bottom: var(--space-xl);
+}
+
+.privacy-title {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.privacy-updated {
+  margin: 0 0 var(--space-lg);
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+}
+
+.privacy-intro {
+  margin: 0;
+}
+
+/* avviso in evidenza sull'invio del testo all'AI */
+.privacy-callout {
+  margin: 0 0 var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-alt);
+}
+
+.privacy-callout p {
+  margin: 0;
+}
+
+/* sezioni: separate da una linea sottile */
+.privacy-section {
+  padding-top: var(--space-lg);
+  margin-top: var(--space-lg);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+}
+
+.privacy-section h2 {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+.privacy-section p {
+  margin: 0 0 var(--space-md);
+}
+
+.privacy-section p:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-section ul {
+  margin: 0 0 var(--space-md);
+  padding-left: var(--space-lg);
+}
+
+.privacy-section li + li {
+  margin-top: var(--space-sm);
+}
+
+/* link: sottolineati, così si riconoscono anche senza vedere il colore */
+.privacy-article a {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere; /* le email lunghe vanno a capo su mobile */
+}
+
+.privacy-article a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--space-xs);
+}
+
+/* nomi delle chiavi del localStorage */
+.privacy-article code {
+  padding: 0.1em 0.35em;
+  border-radius: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* ---------- Desktop ---------- */
+@media (min-width: 768px) {
+  .privacy-container {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+}
