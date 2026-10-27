@@ -24,6 +24,7 @@ function Footer() {
             <a
               key={link.href}
               href={link.href}
+              target={"_blank"}
               className={styles["footer-link"]}
             >
               {link.label}
