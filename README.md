@@ -10,6 +10,20 @@ L'applicazione è composta da:
 
 Questa guida spiega come installare il progetto, configurarlo e avviarlo sul proprio computer.
 
+## Anteprima
+
+### Accesso
+
+L'utente accede con email e password oppure crea un nuovo account. Dal pulsante in alto a destra si passa dal tema scuro al tema chiaro.
+
+![Accesso a Business Assistant](docs/media/login.gif)
+
+### Dashboard
+
+Dopo l'accesso, l'utente descrive la propria idea imprenditoriale e avvia la valutazione.
+
+![Dashboard di Business Assistant](docs/media/dashboard.gif)
+
 ---
 
 ## 1. Prerequisiti
