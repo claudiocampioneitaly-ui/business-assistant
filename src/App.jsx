@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router";
-import { useAuth } from "./Hooks/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import { getInitialTheme, applyTheme } from "./utils/themeHelper";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Auth from "./components/Auth";
-import Dashboard from "./components/Dashboard";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 import Loader from "./components/Loader";
-import NotFound from "./components/NotFoundPage";
-import PrivacyPage from "./components/PrivacyPage";
+import NotFound from "./pages/NotFoundPage";
+import PrivacyPage from "./pages/PrivacyPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // HOME: Gestisce la schermata iniziale in base allo stato di autenticazione
 function HomeRoute({ session }) {
@@ -20,17 +21,6 @@ function HomeRoute({ session }) {
 
   // Se la sessione è null, l'utente visualizza il modulo di login/registrazione
   return <Auth />;
-}
-
-// ROTTA PROTETTA: Impedisce l'accesso alla Dashboard agli utenti non autenticati
-function ProtectedRoute({ session }) {
-  // Se la sessione è assente, reindirizziamo l'utente alla Home
-  if (!session) {
-    return <Navigate to="/" replace />;
-  }
-
-  // Se la sessione è valida, l'utente accede alla Dashboard protetta
-  return <Dashboard session={session} />;
 }
 
 function App() {
@@ -73,11 +63,11 @@ function App() {
           {/* Home: login/registrazione oppure reindirizzamento alla Dashboard */}
           <Route path="/" element={<HomeRoute session={session} />} />
 
-          {/* Dashboard: accessibile soltanto con una sessione valida */}
-          <Route
-            path="/dashboard"
-            element={<ProtectedRoute session={session} />}
-          />
+          {/* Rotte protette: accessibili soltanto con una sessione valida.
+              Per proteggere una nuova pagina basta aggiungerla qui dentro. */}
+          <Route element={<ProtectedRoute session={session} />}>
+            <Route path="/dashboard" element={<Dashboard session={session} />} />
+          </Route>
           <Route path="/privacy" element={<PrivacyPage />} />
 
           {/* Rotta jolly: intercetta tutti gli URL non definiti e mostra la pagina 404 */}

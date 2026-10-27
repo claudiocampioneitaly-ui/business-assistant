@@ -1,4 +1,4 @@
-import styles from "./style/PrivacyPage.module.css";
+import styles from "../style/PrivacyPage.module.css";
 
 // =====================================================================
 // DATI DA COMPLETARE: modifica SOLO queste costanti, il testo si aggiorna da solo

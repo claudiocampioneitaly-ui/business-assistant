@@ -1,7 +1,7 @@
 import React from "react";
 // CSS Module: le classi di Score.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
-import styles from "./Score.module.css";
-import "../src/index.css";
+import styles from "../style/Score.module.css";
+import "../index.css";
 
 function Score({
   score = 0,

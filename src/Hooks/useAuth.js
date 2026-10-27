@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // Importiamo l'istanza personalizzata che hai configurato in src/supabaseClient.js
-import { supabaseClient } from '../supabaseClient';
+import { supabaseClient } from '../lib/supabaseClient';
 
 export function useAuth() {
   // Stato per memorizzare i dati dell'utente autenticato (o null se disconnesso)

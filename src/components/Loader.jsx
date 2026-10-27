@@ -1,5 +1,5 @@
 import React from "react";
-import Spinner from "../../cassetto-degli-attrezzi/Spinner";
+import Spinner from "./Spinner";
 
 function Loader() {
   return (

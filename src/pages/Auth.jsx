@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 // Importiamo l'istanza personalizzata che fa da ponte con il nostro backend Supabase
-import { supabaseClient } from "../supabaseClient";
+import { supabaseClient } from "../lib/supabaseClient";
 // Stile della schermata di accesso/registrazione: tutte le classi hanno il prefisso "auth-"
 // così non entrano in conflitto con quelle della Dashboard (.form-group, .error-message, ...)
 // CSS Module: le classi di Auth.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
-import styles from "./style/Auth.module.css";
+import styles from "../style/Auth.module.css";
 
 // NUOVO: traduce gli errori di Supabase in messaggi sicuri per l'utente.
 // Non mostriamo mai il messaggio originale: può contenere dettagli tecnici.

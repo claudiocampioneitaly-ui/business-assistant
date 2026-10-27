@@ -1,4 +1,4 @@
-import styles from "./style/Footer.module.css";
+import styles from "../style/Footer.module.css";
 
 // Link del footer: modifica qui href e testi quando avrai le pagine reali
 const FOOTER_LINKS = [

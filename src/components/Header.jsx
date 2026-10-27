@@ -1,7 +1,7 @@
 import { useRef } from "react"; // NUOVO
 // Importiamo la TUA istanza personalizzata usando il percorso relativo corretto
-import { supabaseClient } from "../supabaseClient";
-import styles from "./style/Header.module.css";
+import { supabaseClient } from "../lib/supabaseClient";
+import styles from "../style/Header.module.css";
 
 //Creare la Funzione Asincrona:
 

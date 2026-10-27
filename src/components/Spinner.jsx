@@ -1,6 +1,6 @@
 // CSS Module: le classi di Spinner.module.css valgono SOLO qui (Vite le rinomina con un hash unico)
-import styles from "./Spinner.module.css";
-import "../src/index.css";
+import styles from "../style/Spinner.module.css";
+import "../index.css";
 
 function Spinner() {
   return (
