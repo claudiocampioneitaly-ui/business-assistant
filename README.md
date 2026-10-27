@@ -1,97 +1,169 @@
-# 🚀 Guida all'Installazione e Configurazione Locale
+# Business Assistant
 
-Benvenuto in **Business Assistant**! Segui questa guida passo-passo per scaricare il progetto sul tuo computer, configurare il database e l'autenticazione con **Supabase**, e agganciare l'Intelligenza Artificiale tramite **Groq**.
+Business Assistant è un'applicazione web che valuta un'idea imprenditoriale con l'Intelligenza Artificiale. Dopo l'accesso, l'utente descrive la propria idea e riceve un Business Success Score, 8 metriche, l'analisi SWOT, i principali competitor, un esito GO / NO GO e 3 suggerimenti operativi. Il report si può scaricare in PDF.
+
+L'applicazione è composta da:
+
+- **Frontend**: React + Vite
+- **Autenticazione**: Supabase Auth (email e password)
+- **Backend**: una Supabase Edge Function (`evaluate-idea`) che interroga un modello AI compatibile con le API di OpenAI (per esempio Groq o OpenAI)
+
+Questa guida spiega come installare il progetto, configurarlo e avviarlo sul proprio computer.
 
 ---
 
-### 📦 Installazione Locale
+## 1. Prerequisiti
 
-Apri il tuo terminale (Bash, PowerShell o Prompt dei Comandi), posizionati nella cartella in cui desideri salvare il progetto ed esegui i seguenti comandi:
+Prima di iniziare servono:
+
+| Requisito                                             | Note                                                                               |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Node.js** 20.19 o superiore (consigliata la 22 LTS) | Scaricabile da [nodejs.org](https://nodejs.org). Include anche `npm`.              |
+| **Git**                                               | Serve per scaricare il repository.                                                 |
+| **Account Supabase**                                  | Gratuito, su [supabase.com](https://supabase.com).                                 |
+| **Chiave API di un provider AI**                      | Per esempio [Groq](https://console.groq.com) (ha un piano gratuito) oppure OpenAI. |
+
+La CLI di Supabase non va installata a parte: è già tra le dipendenze del progetto e si usa con `npx supabase`.
+
+Per controllare la versione di Node.js installata:
 
 ```bash
-git clone https://github.com
+node -v
+```
+
+---
+
+## 2. Installazione
+
+Apri un terminale nella cartella in cui vuoi salvare il progetto ed esegui:
+
+```bash
+# 1. Scarica il repository (sostituisci con l'indirizzo del tuo repository)
+git clone <URL-del-repository>
+
+# 2. Entra nella cartella del progetto
 cd business-assistant
+
+# 3. Installa le dipendenze
 npm install
 ```
 
 ---
 
-### 🗄️ Inizializzazione di Supabase
+## 3. Configurazione di Supabase
 
-Per far funzionare l'autenticazione e la valutazione delle idee, devi collegare il progetto locale al tuo account Supabase Cloud.
+### 3.1 Creare il progetto
 
-1. Vai su [Supabase](https://supabase.com) ed effettua l'accesso.
-2. Crea un **nuovo progetto** (New Project), scegli un nome (es. *BusinessAssistant*) e imposta una password sicura per il database.
-3. Attendi un minuto che il database venga creato. Una volta pronto, copia il codice identificativo del progetto (**Project ID / Project Ref**). Lo trovi nella Dashboard web sotto *Project Settings -> General*.
+1. Accedi a [Supabase](https://supabase.com/dashboard).
+2. Crea un nuovo progetto (**New Project**), scegli un nome (per esempio `BusinessAssistant`) e imposta una password per il database.
+3. Quando il progetto è pronto, copia il **Project ID** (detto anche _Project Ref_). Lo trovi in **Project Settings → General**.
 
-Ora torna nel tuo terminale ed esegui i comandi per agganciare la CLI di Supabase:
+L'applicazione non usa tabelle proprie: non serve creare tabelle né eseguire migrazioni.
+
+### 3.2 Collegare il progetto locale
 
 ```bash
+# 1. Accedi a Supabase dal terminale (si apre una finestra del browser)
 npx supabase login
-npx supabase link --project-ref il-tuo-id-progetto
+
+# 2. Collega la cartella locale al progetto remoto
+npx supabase link --project-ref <il-tuo-project-id>
 ```
+
+### 3.3 Configurare l'autenticazione
+
+La registrazione avviene con email e password, e Supabase invia un'email di conferma. Perché il link nell'email riporti all'applicazione:
+
+1. Vai su **Authentication → URL Configuration**.
+2. In **Site URL** inserisci l'indirizzo dell'applicazione. In locale è `http://localhost:5173`.
+3. Se l'app verrà pubblicata online, aggiungi anche l'indirizzo pubblico in **Redirect URLs**.
+
+Il provider **Email** è attivo di default in **Authentication → Sign In / Providers**.
 
 ---
 
-### 🔑 Configurazione delle Variabili del Frontend (.env)
+## 4. Variabili d'ambiente
 
-Nella cartella principale (root) del progetto, crea un nuovo file e nominalo esattamente **`.env`**. Al suo interno devi incollare le chiavi pubbliche di Supabase che permettono all'app React di comunicare con il database:
+### 4.1 Frontend (file `.env`)
+
+Nella cartella principale del progetto crea un file chiamato esattamente `.env` con queste variabili:
 
 ```env
-VITE_SUPABASE_URL=https://supabase.co
-VITE_SUPABASE_ANON_KEY=la-tua-chiave-anon-pubblica-che-trovi-su-supabase
-```
-*(Puoi trovare queste due chiavi nella dashboard web di Supabase sotto Project Settings -> API).*
-
----
-
-### 🤖 Creazione Chiave Groq e Configurazione dei Secrets
-
-Per agganciare l'Intelligenza Artificiale senza esporre la tua chiave segreta nel frontend, sfrutteremo le **Edge Functions** di Supabase collegate a **Groq**.
-
-1. Vai su [Groq Console](https://groq.com) e crea un account gratuito.
-2. Vai nella sezione **API Keys** e clicca su **Create API Key**.
-3. Scegli un nome e copia la chiave segreta generata (inizierà con `gsk_`).
-
-Prima di configurare i server, torna sul tuo terminale ed esegui questa chiamata di test per assicurarti che la chiave funzioni correttamente e risponda con l'elenco dei modelli disponibili:
-
-```bash
-curl https://groq.com -H "Authorization: Bearer la-tua-chiave-gsk"
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 ```
 
-Se il comando risponde stampando a schermo un oggetto JSON con la lista dei modelli, la chiave è attiva. Ora puoi salvarla nei server blindati di Supabase (**Secrets**), in modo che la funzione di backend possa leggerla in totale sicurezza:
+| Variabile                | Dove si trova                                                |
+| ------------------------ | ------------------------------------------------------------ |
+| `VITE_SUPABASE_URL`      | Supabase → **Project Settings → API** → _Project URL_        |
+| `VITE_SUPABASE_ANON_KEY` | Supabase → **Project Settings → API** → chiave _anon public_ |
+
+Il file `.env` è già escluso da Git e non va mai pubblicato nel repository.
+
+### 4.2 Edge Function (secrets di Supabase)
+
+La chiave del provider AI non deve mai stare nel frontend: viene salvata come _secret_ su Supabase e la legge solo la Edge Function.
+
+| Secret        | Obbligatorio | Descrizione                                                           |
+| ------------- | ------------ | --------------------------------------------------------------------- |
+| `AI_API_KEY`  | Sì           | Chiave API del provider AI                                            |
+| `AI_BASE_URL` | No           | Indirizzo dell'API del provider. Default: `https://api.openai.com/v1` |
+| `AI_MODEL`    | No           | Modello da usare. Default: `gpt-4o-mini`                              |
+
+Esempio di configurazione con **Groq**:
+
+1. Su [Groq Console](https://console.groq.com) vai in **API Keys** e crea una nuova chiave (inizia con `gsk_`).
+2. Salva i secrets su Supabase:
 
 ```bash
-npx supabase secrets set AI_API_KEY=la_tua_chiave_gsk_qui
-npx supabase secrets set AI_BASE_URL=https://groq.com
+npx supabase secrets set AI_API_KEY=<la-tua-chiave>
+npx supabase secrets set AI_BASE_URL=https://api.groq.com/openai/v1
 npx supabase secrets set AI_MODEL=openai/gpt-oss-120b
-npx supabase secrets set GITHUB_TOKEN=la_tua_chiave_gsk_qui
+```
+
+3. Verifica che siano stati salvati:
+
+```bash
 npx supabase secrets list
 ```
 
+Se usi OpenAI basta impostare `AI_API_KEY`: indirizzo e modello hanno già i valori predefiniti.
+
 ---
 
-### 🚀 Deploy Finale della Edge Function
+## 5. Deploy della Edge Function
 
-Ora che il server cloud possiede tutte le chiavi dell'AI, invia online il codice del tuo backend serverless (`index.js`) con questo comando:
+Pubblica la funzione `evaluate-idea` sul tuo progetto Supabase:
 
 ```bash
 npx supabase functions deploy evaluate-idea --no-verify-jwt
 ```
-Questo comando compila ed esegue il caricamento della funzione `evaluate-idea` nel cloud di Supabase. Al termine, l'endpoint sarà attivo globalmente.
+
+Al termine la funzione è attiva e l'applicazione la richiama automaticamente. Va ripubblicata ogni volta che modifichi il file `supabase/functions/evaluate-idea/index.js`.
+
+I secrets si possono modificare in qualsiasi momento senza ripubblicare la funzione.
 
 ---
 
-### 🏁 Avvio dell'Applicazione in Locale
-
-Tutti gli ingranaggi sono al loro posto! Ora puoi finalmente lanciare l'applicazione sul tuo computer:
+## 6. Avvio in locale
 
 ```bash
 npm run dev
 ```
 
-1. Apri l'indirizzo locale fornito da Vite nel browser (di solito `http://localhost:5173`).
-2. Nella schermata iniziale, clicca su *"Non hai un account? Registrati"* per creare un nuovo profilo utente reale su Supabase Auth.
-3. Controlla la tua casella email (anche nello spam) e clicca sul link di conferma per attivare l'account.
-4. Effettua l'accesso inserendo Email e Password.
-5. Verrai reindirizzato alla **Dashboard**. Scrivi un'idea imprenditoriale di almeno 30 caratteri, premi invio e guarda l'AI generare il punteggio e la matrice SWOT, con la possibilità di scaricare l'intero report testuale in formato **PDF modificabile**.
+1. Apri nel browser l'indirizzo indicato da Vite (di solito `http://localhost:5173`).
+2. Clicca su **"Non hai un account? Registrati"** e crea un account.
+3. Accedi con email e password.
+4. Nella Dashboard descrivi la tua idea (almeno 30 caratteri) e avvia l'analisi.
+5. Al termine puoi scaricare il report in PDF.
+
+---
+
+## Comandi disponibili
+
+| Comando           | Cosa fa                                             |
+| ----------------- | --------------------------------------------------- |
+| `npm run dev`     | Avvia l'applicazione in sviluppo                    |
+| `npm run build`   | Crea la versione ottimizzata nella cartella `dist/` |
+| `npm run preview` | Mostra in locale la versione creata con `build`     |
+| `npm run lint`    | Controlla il codice con oxlint                      |
