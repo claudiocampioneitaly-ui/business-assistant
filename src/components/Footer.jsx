@@ -2,10 +2,7 @@ import styles from "../style/Footer.module.css";
 
 // Link del footer: modifica qui href e testi quando avrai le pagine reali
 const FOOTER_LINKS = [
-  {
-    label: "Documentazione",
-    href: "https://github.com/claudiocampioneitaly-ui/business-assistant/blob/main/README.md",
-  },
+  { label: "Documentazione", href: "/documentazione" },
   { label: "Privacy", href: "/privacy" },
 ];
 
@@ -21,12 +18,7 @@ function Footer() {
         {/* Link */}
         <nav className={styles["footer-nav"]}>
           {FOOTER_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              target={"_blank"}
-              className={styles["footer-link"]}
-            >
+            <a key={link.href} href={link.href} className={styles["footer-link"]}>
               {link.label}
             </a>
           ))}

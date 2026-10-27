@@ -1,0 +1,164 @@
+/* CSS Module della pagina Documentazione (contenuto del README).
+   Gli elementi (h1, p, table, code...) arrivano dal Markdown e non hanno classi,
+   quindi vengono stilizzati come discendenti di .doc-article.
+   Colori, font e spaziature arrivano SOLO dalle variabili di index.css,
+   quindi light/dark (html.dark) funzionano da soli. */
+
+/* contenitore della pagina: occupa lo spazio tra header e footer */
+.doc-container {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-xl) var(--page-padding);
+  background-color: var(--color-bg);
+}
+
+/* colonna di lettura: un po' più larga della Privacy per tabelle e codice */
+.doc-article {
+  max-width: 48rem;
+  margin: 0 auto;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+}
+
+/* ---------- Titoli ---------- */
+.doc-article h1 {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.doc-article h2 {
+  margin: var(--space-xl) 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+
+.doc-article h3 {
+  margin: var(--space-lg) 0 var(--space-sm);
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+/* ---------- Testo ---------- */
+.doc-article p {
+  margin: 0 0 var(--space-md);
+}
+
+.doc-article ul,
+.doc-article ol {
+  margin: 0 0 var(--space-md);
+  padding-left: var(--space-lg);
+}
+
+.doc-article li + li {
+  margin-top: var(--space-sm);
+}
+
+/* separatori "---" tra le sezioni */
+.doc-article hr {
+  margin: var(--space-xl) 0;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+}
+
+/* link: sottolineati, così si riconoscono anche senza vedere il colore */
+.doc-article a {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+
+.doc-article a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--space-xs);
+}
+
+/* ---------- Codice ---------- */
+/* codice in linea (nomi di file, variabili...) */
+.doc-article code {
+  padding: 0.1em 0.35em;
+  border-radius: var(--space-xs);
+  background-color: var(--color-surface-alt);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* blocchi di comandi: scorrono in orizzontale invece di allargare la pagina */
+.doc-article pre {
+  margin: 0 0 var(--space-md);
+  padding: var(--space-md);
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-alt);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+}
+
+.doc-article pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+/* ---------- Tabelle ---------- */
+.doc-table-wrapper {
+  margin: 0 0 var(--space-md);
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+  border-radius: var(--radius-md);
+}
+
+.doc-table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-md);
+}
+
+.doc-table-wrapper th,
+.doc-table-wrapper td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+}
+
+.doc-table-wrapper th {
+  background-color: var(--color-surface-alt);
+  font-weight: var(--weight-semibold);
+}
+
+.doc-table-wrapper tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- Immagini (GIF dell'anteprima) ---------- */
+.doc-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: var(--space-sm) 0 var(--space-md);
+  border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+  border-radius: var(--radius-md);
+}
+
+/* ---------- Desktop ---------- */
+@media (min-width: 768px) {
+  .doc-container {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+}
