@@ -59,7 +59,9 @@ function Dashboard({ session }) {
       await timerMinimo;
 
       setResult(data);
-      ultimaIdeaRef.current = idea.trim(); // NUOVO: salviamo l'idea appena valutata
+      /*setResult(data); salva nello stato React result la risposta della Edge Function (il JSON con sintesi, metriche, SWOT e così via).Cambiando lo stato, React ridisegna il componente. Il blocco {result && (...)} nella Dashboard, prima nascosto perché result era null, ora si mostra con i risultati. Qui data è l’oggetto restituito da supabaseClient.functions.invoke(...).*/
+      
+      ultimaIdeaRef.current = idea.trim(); // NUOVO: salviamo l'idea appena valutata. E' necessario non fare il refresh della pagina se si vuole conservare l'idea.
     } catch (err) {
       // NUOVO: messaggio generico di default, mai err.message (è tecnico, es. "non-2xx status code")
       let messaggio =
@@ -111,6 +113,7 @@ function Dashboard({ session }) {
             placeholder="Descrivi dettagliatamente il tuo progetto, il mercato di riferimento e il target di clienti..."
             required
             minLength={30}
+            maxLength={400}
             className={styles["idea-textarea"]}
           />
         </div>

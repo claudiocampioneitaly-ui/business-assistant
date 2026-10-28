@@ -52,37 +52,54 @@ function Auth() {
     setLoadingSubmit(true); // Congela l'interfaccia
 
     try {
+      // Il flag ref e il pulsante disabilitato sono impostati prima di questo blocco (non li vedo qui)
       if (isRegistering) {
         // --- CASO REGISTRAZIONE ---
+        // Chiede a Supabase di creare l'utente; restituisce { data, error }
+        // e qui ci interessa solo l'errore, rinominato authError per non confonderlo con altre variabili
         const { error: authError } = await supabaseClient.auth.signUp({
-          email: email,
-          password: password,
+          email: email, // email scritta dall'utente (stato React)
+          password: password, // password scritta dall'utente (stato React)
         });
+        // Se Supabase segnala un errore, salta subito al catch
         if (authError) throw authError;
+        // Se tutto va bene, mostra un messaggio di successo
+        // (con la conferma email attiva, l'utente non è ancora loggato) 
         setSuccessMessage(
-          "Registrazione completata! Controlla la tua email per confermare l'account.",
+          "Registrazione completata!",
         );
       } else {
         // --- CASO LOGIN ---
+        // Controlla le credenziali; se sono corrette, Supabase crea la sessione
         const { error: authError } =
           await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password,
           });
+        // Errore (es. credenziali sbagliate): salta al catch
         if (authError) throw authError;
+        // In caso di successo non serve altro: onAuthStateChange in useAuth
+        // aggiorna la sessione e la Home reindirizza alla Dashboard
       }
     } catch (err) {
       // --- GESTIONE DEGLI ERRORI ---
       // NUOVO: messaggio "tradotto", mai quello grezzo di Supabase
+      // messaggioErroreAuth è una tua funzione (non la vedo qui): converte l'errore in un testo
+      // in italiano e sicuro da mostrare all'utente
       setError(messaggioErroreAuth(err));
+      // import.meta.env.DEV è true solo con "npm run dev", false nella build di produzione
+      // quindi il dettaglio tecnico finisce in console solo mentre sviluppi
       if (import.meta.env.DEV) console.error("Errore auth:", err); // NUOVO: dettagli solo in sviluppo
     } finally {
       // --- RIPRISTINO INTERFACCIA ---
-      inCorsoRef.current = false; // NUOVO: riapre il lucchetto, anche in caso di errore
+      // finally gira sempre, sia con successo sia con errore
+      // NUOVO: riapre il lucchetto, anche in caso di errore
+      // (inCorsoRef è un useRef: blocca i doppi invii perché si aggiorna subito, senza attendere il re-render)
+      inCorsoRef.current = false;
+      // Riabilita pulsante e campi
       setLoadingSubmit(false);
     }
   };
-
 
   // Cambia vista tra login e registrazione: la usano sia i due bottoni in alto sia il link in fondo.
   // Ripulisce anche i messaggi, così un errore del login non resta visibile nella registrazione.

@@ -6,23 +6,31 @@ import styles from "../style/Header.module.css";
 //Creare la Funzione Asincrona:
 
 function Header({ theme, toggleTheme, session }) {
-  // NUOVO: evita doppi click sul logout
+  // useRef crea un "contenitore" (.current) che sopravvive ai re-render
+  // e, quando cambia, NON provoca un nuovo render (a differenza di useState).
+  // Qui funziona da semaforo: true = logout già in corso.
   const logoutInCorsoRef = useRef(false);
 
   const handleLogout = async () => {
-    if (logoutInCorsoRef.current) return; // NUOVO
-    logoutInCorsoRef.current = true; // NUOVO
+    // Se un logout è già partito, esci subito: ignora i click successivi
+    if (logoutInCorsoRef.current) return;
+    // Abbassa il semaforo: da ora i nuovi click vengono bloccati
+    logoutInCorsoRef.current = true;
     try {
+      // Chiede a Supabase di chiudere la sessione (cancella il token salvato)
       await supabaseClient.auth.signOut();
     } catch (error) {
-      // NUOVO: il dettaglio tecnico solo in sviluppo, mai in produzione
+      // import.meta.env.DEV è true solo con "npm run dev" (sviluppo), false nella build:
+      // così il dettaglio tecnico dell'errore non compare nella console in produzione
       if (import.meta.env.DEV)
         console.error("Errore durante il logout:", error);
     } finally {
-      logoutInCorsoRef.current = false; // NUOVO
+      // Eseguito sempre, con successo o errore: riapre il semaforo
+      // così, se il logout è fallito, l'utente può riprovare
+      logoutInCorsoRef.current = false;
     }
   };
-
+  
   return (
     <header className={styles["main-header"]}>
       <div className={styles["header-inner"]}>

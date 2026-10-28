@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router";
 import { useAuth } from "./Hooks/useAuth";
 import { getInitialTheme, applyTheme } from "./utils/themeHelper";
-
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Auth from "./pages/Auth";
@@ -69,15 +68,17 @@ function App() {
           <Route element={<ProtectedRoute session={session} />}>
             <Route path="/dashboard" element={<Dashboard session={session} />} />
           </Route>
+
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/documentazione" element={<DocumentationPage theme={theme} />} />
-
           {/* Rotta jolly: intercetta tutti gli URL non definiti e mostra la pagina 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 
-      <Footer />
+      <Footer/>
+
+      
     </>
   );
 }
