@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router";
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "./Hooks/useAuth";
 import { getInitialTheme, applyTheme } from "./utils/themeHelper";
 
 import Header from "./components/Header";
